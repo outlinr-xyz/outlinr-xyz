@@ -3,7 +3,7 @@ import { Outlet } from "react-router";
 import AppSidebar from "./_components/app-sidebar";
 import AppNavbar from "./_components/app-navbar";
 
-export default function DashboardPageLayout() {
+export default function HomePageLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />

@@ -3,7 +3,7 @@ import { Plus, Sparkle } from "lucide-react";
 import PopularFeatures from "./_components/popular-features";
 import RecentPresentations from "./_components/recent-presentations";
 
-export default function DashboardIndexPage() {
+export default function HomeIndexPage() {
   return (
     <>
       <h1 className="font-semibold text-2xl sm:text-3xl lg:text-4xl">
