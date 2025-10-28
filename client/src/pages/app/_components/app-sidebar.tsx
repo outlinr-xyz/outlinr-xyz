@@ -1,0 +1,120 @@
+import { LogOutIcon } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router';
+
+import { useIsMobile } from '@/components/hooks/use-mobile';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from '@/components/ui/sidebar';
+import { supabase } from '@/lib/supabase';
+import { cn, sidebarItems } from '@/lib/utils';
+import { useAuthStore } from '@/store/auth.store';
+
+export default function AppSidebar() {
+  const clearAuth = useAuthStore((s) => s.clear);
+  const navigate = useNavigate();
+  const { state } = useSidebar();
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  const isMobile = useIsMobile();
+
+  const handleLogout = async (url: string) => {
+    await supabase.auth.signOut();
+    clearAuth();
+    navigate(url);
+  };
+
+  return (
+    <Sidebar collapsible="icon" variant="inset">
+      <SidebarHeader className="mt-3">
+        <Link to="/app/home" className="text-current no-underline">
+          <div className="flex h-14 flex-row items-center justify-start gap-2 px-2 py-3">
+            <img src="/outlinr.webp" alt="outlinr logo" className="size-4" />
+            <span
+              className={cn(
+                'overflow-hidden text-2xl font-bold',
+                state === 'collapsed' && 'hidden',
+              )}
+            >
+              Outlinr
+            </span>
+          </div>
+        </Link>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {sidebarItems.top.map((item) => {
+                let isActive = false;
+                if (item.url === '/app/home')
+                  isActive =
+                    pathname === '/app/home' || pathname === '/app/home/';
+                else
+                  isActive =
+                    pathname === item.url ||
+                    pathname.startsWith(item.url + '/');
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      asChild
+                      className={cn(
+                        'my-1 text-sm transition-all duration-300',
+                        isActive &&
+                          'font-medium text-[#254BF5] hover:text-[#254BF5] [&:hover]:text-[#254BF5]',
+                      )}
+                    >
+                      <Link to={item.url}>
+                        <item.icon />
+                        <span className="capitalize">{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter className="text-xs capitalize opacity-60">
+        <SidebarMenu>
+          {(state !== 'collapsed' || isMobile) &&
+            sidebarItems.bottom.map((item) => {
+              if (!item.url) return null;
+              return (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link to={item.url}>
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            })}
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              onClick={() => {
+                handleLogout('/');
+              }}
+            >
+              <div className="flex cursor-pointer">
+                <LogOutIcon />
+                <span>Logout</span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
+  );
+}
