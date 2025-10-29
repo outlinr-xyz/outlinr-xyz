@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { LoginForm } from '../_components/login-form';
 
 export default function LoginPage() {
@@ -6,13 +8,13 @@ export default function LoginPage() {
       <LoginForm />
       <p className="text-muted-foreground text-center text-xs">
         By logging in, you agree to our{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="#" className="underline underline-offset-4">
           Terms of Service
-        </a>{' '}
+        </Link>{' '}
         and{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="#" className="underline underline-offset-4">
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
     </>

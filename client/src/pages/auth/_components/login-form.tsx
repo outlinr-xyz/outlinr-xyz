@@ -3,7 +3,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -194,12 +194,12 @@ export function LoginForm({ className, ...props }: Props) {
               </Field>
 
               <div className="flex justify-end">
-                <a
-                  href="/forgot-password"
+                <Link
+                  to="/auth/forgot-password"
                   className="text-muted-foreground text-sm underline underline-offset-4"
                 >
                   Forgot password?
-                </a>
+                </Link>
               </div>
 
               <Field>
@@ -247,12 +247,12 @@ export function LoginForm({ className, ...props }: Props) {
 
               <FieldDescription className="text-center">
                 Don&apos;t have an account?{' '}
-                <a
-                  href="/auth/sign-up"
+                <Link
+                  to="/auth/sign-up"
                   className="underline underline-offset-4"
                 >
                   Sign Up
-                </a>
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>

@@ -3,7 +3,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import { Eye, EyeOff } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -281,9 +281,9 @@ export function SignupForm({ className, ...props }: Props) {
 
               <FieldDescription className="text-center">
                 Already have an account?{' '}
-                <a href="/auth/login" className="underline underline-offset-4">
+                <Link to="/auth/login" className="underline underline-offset-4">
                   Login
-                </a>
+                </Link>
               </FieldDescription>
             </FieldGroup>
           </form>

@@ -1,3 +1,5 @@
+import { Link } from 'react-router';
+
 import { SignupForm } from '../_components/signup-form';
 
 export default function SignupPage() {
@@ -6,13 +8,13 @@ export default function SignupPage() {
       <SignupForm />
       <p className="text-muted-foreground text-center text-xs">
         By signing up, you agree to our{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="#" className="underline underline-offset-4">
           Terms of Service
-        </a>{' '}
+        </Link>{' '}
         and{' '}
-        <a href="#" className="underline underline-offset-4">
+        <Link to="#" className="underline underline-offset-4">
           Privacy Policy
-        </a>
+        </Link>
         .
       </p>
     </>
