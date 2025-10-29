@@ -1,4 +1,5 @@
 import { LogOutIcon } from 'lucide-react';
+import { memo } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import { useIsMobile } from '@/components/hooks/use-mobile';
@@ -18,7 +19,7 @@ import { supabase } from '@/lib/supabase';
 import { cn, sidebarItems } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 
-export default function AppSidebar() {
+const AppSidebar = memo(function AppSidebar() {
   const clearAuth = useAuthStore((s) => s.clear);
   const navigate = useNavigate();
   const { state } = useSidebar();
@@ -55,14 +56,12 @@ export default function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {sidebarItems.top.map((item) => {
-                let isActive = false;
-                if (item.url === '/app/home')
-                  isActive =
-                    pathname === '/app/home' || pathname === '/app/home/';
-                else
-                  isActive =
-                    pathname === item.url ||
-                    pathname.startsWith(item.url + '/');
+                const isActive =
+                  item.url === '/app/home'
+                    ? pathname === '/app/home' || pathname === '/app/home/'
+                    : pathname === item.url ||
+                      pathname.startsWith(item.url + '/');
+
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
@@ -117,4 +116,6 @@ export default function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-}
+});
+
+export default AppSidebar;

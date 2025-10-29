@@ -1,8 +1,9 @@
 import { Plus } from 'lucide-react';
+import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 
-export default function DashboardPage() {
+const DashboardPage = memo(function DashboardPage() {
   return (
     <>
       <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
@@ -22,4 +23,6 @@ export default function DashboardPage() {
       </div>
     </>
   );
-}
+});
+
+export default DashboardPage;

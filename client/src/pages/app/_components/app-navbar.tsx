@@ -1,5 +1,5 @@
 import { BellIcon, SearchIcon } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -12,17 +12,27 @@ import {
 import { Kbd } from '@/components/ui/kbd';
 import { SidebarTrigger } from '@/components/ui/sidebar';
 
-export default function AppNavbar() {
+const AppNavbar = memo(function AppNavbar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const pathname = location.pathname;
 
-  const noSearchPaths = ['/app/home', '/app/home/'];
-  const showSearchBar = !noSearchPaths.includes(pathname);
+  const { showSearchBar, placeholder } = useMemo(() => {
+    const noSearchPaths = ['/app/home', '/app/home/'];
+    const shouldShow = !noSearchPaths.includes(pathname);
 
-  const context = pathname.split('/').pop() || '';
-  const capitalizedContext = context.charAt(0).toUpperCase() + context.slice(1);
-  const placeholder = context ? `Search in ${capitalizedContext}` : 'Search...';
+    const context = pathname.split('/').pop() || '';
+    const capitalizedContext =
+      context.charAt(0).toUpperCase() + context.slice(1);
+    const placeholderText = context
+      ? `Search in ${capitalizedContext}`
+      : 'Search...';
+
+    return {
+      showSearchBar: shouldShow,
+      placeholder: placeholderText,
+    };
+  }, [pathname]);
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -74,4 +84,6 @@ export default function AppNavbar() {
       </div>
     </nav>
   );
-}
+});
+
+export default AppNavbar;

@@ -20,3 +20,18 @@ export const useAuthStore = create<AuthState>((set) => ({
   setLoading: (loading) => set({ loading }),
   clear: () => set({ session: null, user: null }),
 }));
+
+// Optimized selectors to prevent unnecessary re-renders
+export const useUser = () => useAuthStore((state) => state.user);
+export const useSession = () => useAuthStore((state) => state.session);
+export const useAuthLoading = () => useAuthStore((state) => state.loading);
+export const useUserDisplayName = () =>
+  useAuthStore((state) => {
+    const user = state.user;
+    return (
+      user?.user_metadata?.full_name ||
+      user?.user_metadata?.name ||
+      user?.email?.split('@')[0] ||
+      'User'
+    );
+  });

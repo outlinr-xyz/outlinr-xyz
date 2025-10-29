@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { supabase } from '@/lib/supabase';
 import { useAuthStore } from '@/store/auth.store';
@@ -8,7 +8,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
   const setLoading = useAuthStore((s) => s.setLoading);
@@ -36,7 +35,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         // Redirect to /app/home after successful OAuth sign in
         if (event === 'SIGNED_IN' && session) {
           // Only redirect if we're on an auth page
-          if (location.pathname.startsWith('/auth')) {
+          const currentPath = window.location.pathname;
+          if (currentPath.startsWith('/auth')) {
             navigate('/app/home', { replace: true });
           }
         }
@@ -48,6 +48,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       mounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, [setSession, setUser, setLoading, navigate, location.pathname]);
+  }, [setSession, setUser, setLoading, navigate]);
   return <>{children}</>;
 };

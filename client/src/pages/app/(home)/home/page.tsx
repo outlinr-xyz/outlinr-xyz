@@ -1,21 +1,17 @@
 import { Plus, Sparkle } from 'lucide-react';
-import React from 'react';
+import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/store/auth.store';
+import { useUserDisplayName } from '@/store/auth.store';
 
 import PopularFeatures from '../../_components/popular-features';
 import RecentPresentations from '../../_components/recent-presentations';
 
-export default function HomePage() {
-  const user = useAuthStore((s) => s.user);
-  const displayName =
-    user?.user_metadata?.full_name ||
-    user?.user_metadata?.name ||
-    user?.email?.split('@')[0] ||
-    'User';
+const HomePage = memo(function HomePage() {
+  const displayName = useUserDisplayName();
+
   return (
-    <React.Fragment>
+    <>
       <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
         Welcome, {displayName}!
       </h1>
@@ -34,6 +30,8 @@ export default function HomePage() {
       </div>
       <PopularFeatures />
       <RecentPresentations />
-    </React.Fragment>
+    </>
   );
-}
+});
+
+export default HomePage;

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Outlet } from 'react-router';
 
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
@@ -5,7 +6,7 @@ import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import AppNavbar from './_components/app-navbar';
 import AppSidebar from './_components/app-sidebar';
 
-export default function AppLayout() {
+const AppLayout = memo(function AppLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -21,4 +22,6 @@ export default function AppLayout() {
       </SidebarInset>
     </SidebarProvider>
   );
-}
+});
+
+export default AppLayout;

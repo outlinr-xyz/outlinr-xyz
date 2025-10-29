@@ -1,4 +1,5 @@
 import { Droplet, Shapes, Signal } from 'lucide-react';
+import { memo } from 'react';
 
 const features = [
   { name: 'Word cloud', icon: Shapes, color: 'text-red-500' },
@@ -7,7 +8,7 @@ const features = [
   { name: 'Scales', icon: Droplet, color: 'text-rose-400' },
 ];
 
-export default function PopularFeatures() {
+const PopularFeatures = memo(function PopularFeatures() {
   return (
     <section>
       <h2 className="mt-2 text-base font-medium md:mt-8">Features</h2>
@@ -31,4 +32,6 @@ export default function PopularFeatures() {
       </div>
     </section>
   );
-}
+});
+
+export default PopularFeatures;

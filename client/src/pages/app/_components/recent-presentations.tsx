@@ -1,4 +1,5 @@
 import { LineChart, MoreHorizontal } from 'lucide-react';
+import { memo } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -47,7 +48,7 @@ const presentations = [
   },
 ];
 
-export default function RecentPresentations() {
+const RecentPresentations = memo(function RecentPresentations() {
   return (
     <section>
       <h2 className="mt-2 text-base font-medium md:mt-8">Recently Viewed</h2>
@@ -56,9 +57,14 @@ export default function RecentPresentations() {
           {presentations.map((presentation) => (
             <Item
               key={presentation.id}
-              style={{ backgroundImage: `url(${presentation.image})` }}
               className="relative aspect-[4/2] overflow-hidden rounded-md bg-cover bg-center sm:aspect-square"
             >
+              <img
+                src={presentation.image}
+                alt={presentation.name}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
               <Link
                 to={`/app/presentation/${presentation.id}/results`}
                 className="absolute top-2 left-2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
@@ -92,4 +98,6 @@ export default function RecentPresentations() {
       </div>
     </section>
   );
-}
+});
+
+export default RecentPresentations;
