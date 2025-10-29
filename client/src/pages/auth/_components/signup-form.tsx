@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { Session, User } from '@supabase/supabase-js';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
@@ -49,16 +48,23 @@ const SignupSchema = z
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
+type LoadingProvider =
+  | 'email'
+  | 'google'
+  | 'azure'
+  | 'discord'
+  | 'linkedin_oidc'
+  | null;
+
 export function SignupForm({ className, ...props }: Props) {
   const navigate = useNavigate();
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
-  const setLoading = useAuthStore((s) => s.setLoading);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<SignupFormValues>({
     resolver: zodResolver(SignupSchema),
     mode: 'onTouched',
@@ -66,9 +72,12 @@ export function SignupForm({ className, ...props }: Props) {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loadingProvider, setLoadingProvider] = useState<LoadingProvider>(null);
+  const isAnyLoading = loadingProvider !== null;
+  const isEmailLoading = loadingProvider === 'email';
 
   async function onSubmit(values: SignupFormValues) {
-    setLoading(true);
+    setLoadingProvider('email');
     toast.dismiss();
 
     try {
@@ -83,36 +92,26 @@ export function SignupForm({ className, ...props }: Props) {
         } else {
           toast.error(error.message || 'Unable to create account.');
         }
-        setLoading(false);
         return;
       }
 
-      const sessionData = (
-        data as { session: Session | null; user: User | null }
-      )?.session;
-      const userData = (data as { session: Session | null; user: User | null })
-        ?.user;
-
+      const { session: sessionData, user: userData } = data;
       setSession(sessionData ?? null);
       setUser(userData ?? null);
 
       toast.success('Account created successfully.');
       navigate('/app/home', { replace: true });
     } catch (e: unknown) {
-      let errorMessage = 'Unexpected error.';
-      if (e instanceof Error) {
-        errorMessage = e.message;
-      }
-      toast.error(errorMessage);
+      toast.error(e instanceof Error ? e.message : 'Unexpected error.');
     } finally {
-      setLoading(false);
+      setLoadingProvider(null);
     }
   }
 
   async function handleOAuth(
     provider: 'google' | 'azure' | 'discord' | 'linkedin_oidc',
   ) {
-    setLoading(true);
+    setLoadingProvider(provider);
     toast.dismiss();
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -123,17 +122,13 @@ export function SignupForm({ className, ...props }: Props) {
       });
       if (error) {
         toast.error(error.message || 'OAuth failed.');
-        setLoading(false);
+        setLoadingProvider(null);
         return;
       }
       toast('Redirecting to provider...');
     } catch (e: unknown) {
-      let errorMessage = 'Unexpected OAuth error.';
-      if (e instanceof Error) {
-        errorMessage = e.message;
-      }
-      toast.error(errorMessage);
-      setLoading(false);
+      toast.error(e instanceof Error ? e.message : 'Unexpected OAuth error.');
+      setLoadingProvider(null);
     }
   }
 
@@ -161,6 +156,7 @@ export function SignupForm({ className, ...props }: Props) {
                   type="email"
                   placeholder="m@example.com"
                   aria-invalid={!!errors.email}
+                  disabled={isAnyLoading}
                   {...register('email')}
                 />
                 {errors.email?.message && (
@@ -178,6 +174,7 @@ export function SignupForm({ className, ...props }: Props) {
                     type={showPassword ? 'text' : 'password'}
                     className="pr-10"
                     aria-invalid={!!errors.password}
+                    disabled={isAnyLoading}
                     {...register('password')}
                   />
                   <button
@@ -212,6 +209,7 @@ export function SignupForm({ className, ...props }: Props) {
                     type={showConfirmPassword ? 'text' : 'password'}
                     className="pr-10"
                     aria-invalid={!!errors.confirmPassword}
+                    disabled={isAnyLoading}
                     {...register('confirmPassword')}
                   />
                   <button
@@ -240,9 +238,16 @@ export function SignupForm({ className, ...props }: Props) {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting}
+                  disabled={isAnyLoading}
                 >
-                  Sign Up
+                  {isEmailLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Signing up...
+                    </>
+                  ) : (
+                    'Sign Up'
+                  )}
                 </Button>
               </Field>
 
@@ -253,30 +258,38 @@ export function SignupForm({ className, ...props }: Props) {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {oauthProviders.map((p) => (
-                  <Button
-                    key={p.provider}
-                    variant="outline"
-                    type="button"
-                    className="flex items-center justify-center gap-2"
-                    onClick={() =>
-                      handleOAuth(
-                        p.provider as
-                          | 'google'
-                          | 'azure'
-                          | 'discord'
-                          | 'linkedin_oidc',
-                      )
-                    }
-                  >
-                    <img
-                      src={p.icon}
-                      alt={p.name}
-                      className="h-5 w-5 object-contain"
-                    />
-                    {p.name}
-                  </Button>
-                ))}
+                {oauthProviders.map((p) => {
+                  const isProviderLoading = loadingProvider === p.provider;
+                  return (
+                    <Button
+                      key={p.provider}
+                      variant="outline"
+                      type="button"
+                      className="flex items-center justify-center gap-2"
+                      disabled={isAnyLoading}
+                      onClick={() =>
+                        handleOAuth(
+                          p.provider as
+                            | 'google'
+                            | 'azure'
+                            | 'discord'
+                            | 'linkedin_oidc',
+                        )
+                      }
+                    >
+                      {isProviderLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <img
+                          src={p.icon}
+                          alt={p.name}
+                          className="h-5 w-5 object-contain"
+                        />
+                      )}
+                      {p.name}
+                    </Button>
+                  );
+                })}
               </div>
 
               <FieldDescription className="text-center">

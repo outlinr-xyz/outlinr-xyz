@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Session, User } from '@supabase/supabase-js';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -37,6 +37,13 @@ const LoginSchema = z.object({
 });
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
+type LoadingProvider =
+  | 'email'
+  | 'google'
+  | 'azure'
+  | 'discord'
+  | 'linkedin_oidc'
+  | null;
 
 export function LoginForm({ className, ...props }: Props) {
   const navigate = useNavigate();
@@ -45,12 +52,14 @@ export function LoginForm({ className, ...props }: Props) {
 
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
-  const setLoading = useAuthStore((s) => s.setLoading);
+  const [loadingProvider, setLoadingProvider] = useState<LoadingProvider>(null);
+  const isAnyLoading = loadingProvider !== null;
+  const isEmailLoading = loadingProvider === 'email';
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(LoginSchema),
     mode: 'onTouched',
@@ -59,7 +68,7 @@ export function LoginForm({ className, ...props }: Props) {
   const [showPassword, setShowPassword] = useState(false);
 
   async function onSubmit(values: LoginFormValues) {
-    setLoading(true);
+    setLoadingProvider('email');
     toast.dismiss();
 
     try {
@@ -74,7 +83,6 @@ export function LoginForm({ className, ...props }: Props) {
         } else {
           toast.error(error.message || 'Login failed.');
         }
-        setLoading(false);
         return;
       }
 
@@ -96,14 +104,14 @@ export function LoginForm({ className, ...props }: Props) {
       }
       toast.error(errorMessage);
     } finally {
-      setLoading(false);
+      setLoadingProvider(null);
     }
   }
 
   async function handleOAuth(
     provider: 'google' | 'azure' | 'discord' | 'linkedin_oidc',
   ) {
-    setLoading(true);
+    setLoadingProvider(provider);
     toast.dismiss();
     try {
       const { error } = await supabase.auth.signInWithOAuth({
@@ -114,7 +122,7 @@ export function LoginForm({ className, ...props }: Props) {
       });
       if (error) {
         toast.error(error.message || 'OAuth failed.');
-        setLoading(false);
+        setLoadingProvider(null);
         return;
       }
       toast('Redirecting to provider for authentication...');
@@ -124,7 +132,7 @@ export function LoginForm({ className, ...props }: Props) {
         errorMessage = e.message;
       }
       toast.error(errorMessage);
-      setLoading(false);
+      setLoadingProvider(null);
     }
   }
 
@@ -152,6 +160,7 @@ export function LoginForm({ className, ...props }: Props) {
                   type="email"
                   placeholder="m@example.com"
                   aria-invalid={!!errors.email}
+                  disabled={isAnyLoading}
                   {...register('email')}
                 />
                 {errors.email?.message && (
@@ -169,6 +178,7 @@ export function LoginForm({ className, ...props }: Props) {
                     type={showPassword ? 'text' : 'password'}
                     className="pr-10"
                     aria-invalid={!!errors.password}
+                    disabled={isAnyLoading}
                     {...register('password')}
                   />
                   <button
@@ -206,9 +216,16 @@ export function LoginForm({ className, ...props }: Props) {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting}
+                  disabled={isAnyLoading}
                 >
-                  Sign In
+                  {isEmailLoading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    'Sign In'
+                  )}
                 </Button>
               </Field>
 
@@ -219,30 +236,39 @@ export function LoginForm({ className, ...props }: Props) {
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                {oauthProviders.map((p) => (
-                  <Button
-                    key={p.provider}
-                    variant="outline"
-                    type="button"
-                    className="flex items-center justify-center gap-2"
-                    onClick={() =>
-                      handleOAuth(
-                        p.provider as
-                          | 'google'
-                          | 'azure'
-                          | 'discord'
-                          | 'linkedin_oidc',
-                      )
-                    }
-                  >
-                    <img
-                      src={p.icon}
-                      alt={p.name}
-                      className="h-5 w-5 object-contain"
-                    />
-                    {p.name}
-                  </Button>
-                ))}
+                {oauthProviders.map((p) => {
+                  const isProviderLoading = loadingProvider === p.provider;
+
+                  return (
+                    <Button
+                      key={p.provider}
+                      variant="outline"
+                      type="button"
+                      className="flex items-center justify-center gap-2"
+                      disabled={isAnyLoading}
+                      onClick={() =>
+                        handleOAuth(
+                          p.provider as
+                            | 'google'
+                            | 'azure'
+                            | 'discord'
+                            | 'linkedin_oidc',
+                        )
+                      }
+                    >
+                      {isProviderLoading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <img
+                          src={p.icon}
+                          alt={p.name}
+                          className="h-5 w-5 object-contain"
+                        />
+                      )}
+                      {p.name}
+                    </Button>
+                  );
+                })}
               </div>
 
               <FieldDescription className="text-center">
