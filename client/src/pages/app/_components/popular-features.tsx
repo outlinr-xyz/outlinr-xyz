@@ -17,7 +17,7 @@ const PopularFeatures = memo(function PopularFeatures() {
           {features.map((feature) => (
             <button
               key={feature.name}
-              className="hover:bg-muted flex h-36 w-full max-w-[9rem] cursor-pointer flex-col items-center justify-center gap-3 rounded-md p-4 transition-colors duration-100"
+              className="hover:bg-muted flex h-36 w-full max-w-36 cursor-pointer flex-col items-center justify-center gap-3 rounded-md p-4 transition-colors duration-100"
             >
               {/*<feature.icon
                 className={feature.color + " " + "size-12 sm:size-14"}

@@ -57,7 +57,7 @@ const RecentPresentations = memo(function RecentPresentations() {
           {presentations.map((presentation) => (
             <Item
               key={presentation.id}
-              className="relative aspect-[4/2] overflow-hidden rounded-md bg-cover bg-center sm:aspect-square"
+              className="relative aspect-4/2 overflow-hidden rounded-md bg-cover bg-center sm:aspect-square"
             >
               <img
                 src={presentation.image}
@@ -76,7 +76,7 @@ const RecentPresentations = memo(function RecentPresentations() {
               </button>
               <Link
                 to={`/app/presentation/${presentation.id}`}
-                className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent p-3 text-white sm:p-4"
+                className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/80 to-transparent p-3 text-white sm:p-4"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-2 overflow-hidden sm:gap-3">
