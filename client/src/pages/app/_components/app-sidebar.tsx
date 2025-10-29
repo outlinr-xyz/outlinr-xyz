@@ -1,5 +1,5 @@
-import { LogOutIcon } from 'lucide-react';
-import { memo } from 'react';
+import { Loader2Icon, LogOutIcon } from 'lucide-react';
+import { memo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import { useIsMobile } from '@/components/hooks/use-mobile';
@@ -25,13 +25,20 @@ const AppSidebar = memo(function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const pathname = location.pathname;
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   const isMobile = useIsMobile();
 
   const handleLogout = async (url: string) => {
-    await supabase.auth.signOut();
-    clearAuth();
-    navigate(url);
+    setIsLoggingOut(true);
+    try {
+      await supabase.auth.signOut();
+      clearAuth();
+      navigate(url);
+    } catch (error) {
+      console.error('Logout error:', error);
+      setIsLoggingOut(false);
+    }
   };
 
   return (
@@ -105,10 +112,15 @@ const AppSidebar = memo(function AppSidebar() {
               onClick={() => {
                 handleLogout('/');
               }}
+              disabled={isLoggingOut}
             >
               <div className="flex cursor-pointer">
-                <LogOutIcon />
-                <span>Logout</span>
+                {isLoggingOut ? (
+                  <Loader2Icon className="animate-spin" />
+                ) : (
+                  <LogOutIcon />
+                )}
+                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
