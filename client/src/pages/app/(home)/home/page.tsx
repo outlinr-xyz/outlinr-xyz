@@ -1,9 +1,10 @@
-import { Plus, Sparkle } from 'lucide-react';
+import { Sparkle } from 'lucide-react';
 import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { useUserDisplayName } from '@/store/auth.store';
 
+import NewPresentationButton from '../../_components/new-presentation-button';
 import PopularFeatures from '../../_components/popular-features';
 import RecentPresentations from '../../_components/recent-presentations';
 
@@ -13,13 +14,11 @@ const HomePage = memo(function HomePage() {
   return (
     <>
       <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
-        Welcome, {displayName}!
+        Welcome {displayName.split(' ')[0]}
       </h1>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button className="flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 sm:px-6">
-          <Plus className="h-4 w-4" /> New Outline
-        </Button>
+        <NewPresentationButton />
         <Button
           className="flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 sm:px-6"
           variant="outline"
