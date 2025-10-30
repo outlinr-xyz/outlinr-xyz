@@ -11,6 +11,11 @@ import {
 } from '@/components/ui/input-group';
 import { Kbd } from '@/components/ui/kbd';
 import { SidebarTrigger } from '@/components/ui/sidebar';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const AppNavbar = memo(function AppNavbar() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -78,9 +83,16 @@ const AppNavbar = memo(function AppNavbar() {
             </ButtonGroup>
           </div>
         )}
-        <div className="hover:bg-muted cursor-pointer rounded-md p-2">
-          <BellIcon className="size-4" />
-        </div>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="hover:bg-muted cursor-pointer rounded-md p-2">
+              <BellIcon className="size-4" />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Notifications</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </nav>
   );

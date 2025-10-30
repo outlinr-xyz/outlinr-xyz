@@ -2,6 +2,7 @@ import { Plus } from 'lucide-react';
 import { memo } from 'react';
 
 import { Button } from '@/components/ui/button';
+
 import NewPresentationButton from '../../_components/new-presentation-button';
 
 const DashboardPage = memo(function DashboardPage() {
