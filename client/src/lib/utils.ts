@@ -1,5 +1,14 @@
 import { type ClassValue, clsx } from 'clsx';
-import { Home, Inbox, Trash, User, Users } from 'lucide-react';
+import {
+  Droplet,
+  Home,
+  Inbox,
+  Shapes,
+  Signal,
+  Trash,
+  User,
+  Users,
+} from 'lucide-react';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -77,6 +86,32 @@ export const oauthProviders = [
   },
 ] as const;
 
+export const popularFeatures = [
+  {
+    name: 'Word cloud',
+    icon: Shapes,
+    color: 'text-red-500',
+    imageSrc: '/word-cloud.webp',
+  },
+  {
+    name: 'Poll',
+    icon: Signal,
+    color: 'text-indigo-500',
+    imageSrc: '/polls.webp',
+  },
+  {
+    name: 'Open Ended',
+    icon: Droplet,
+    color: 'text-rose-400',
+    imageSrc: '/open-ended.webp',
+  },
+  {
+    name: 'Scales',
+    icon: Droplet,
+    color: 'text-rose-400',
+    imageSrc: '/scales.webp',
+  },
+] as const;
 /**
  * Format a date as relative time (e.g., "2 hours ago", "3 days ago")
  */

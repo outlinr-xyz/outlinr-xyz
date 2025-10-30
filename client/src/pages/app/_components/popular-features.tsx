@@ -1,12 +1,6 @@
-import { Droplet, Shapes, Signal } from 'lucide-react';
 import { memo } from 'react';
 
-const features = [
-  { name: 'Word cloud', icon: Shapes, color: 'text-red-500' },
-  { name: 'Poll', icon: Signal, color: 'text-indigo-500' },
-  { name: 'Quiz', icon: Droplet, color: 'text-rose-400' },
-  { name: 'Scales', icon: Droplet, color: 'text-rose-400' },
-];
+import { popularFeatures } from '@/lib/utils';
 
 const PopularFeatures = memo(function PopularFeatures() {
   return (
@@ -14,15 +8,20 @@ const PopularFeatures = memo(function PopularFeatures() {
       <h2 className="mt-2 text-base font-medium md:mt-8">Features</h2>
       <div className="w-full max-w-6xl">
         <div className="mt-6 grid grid-cols-2 justify-items-center gap-4 py-6 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
-          {features.map((feature) => (
+          {popularFeatures.map((feature) => (
             <button
               key={feature.name}
-              className="hover:bg-muted flex h-36 w-full max-w-36 cursor-pointer flex-col items-center justify-center gap-3 rounded-md p-4 transition-colors duration-100"
+              className="group relative flex h-36 w-full max-w-36 cursor-pointer flex-col items-center justify-center gap-3 p-4"
             >
-              {/*<feature.icon
-                className={feature.color + " " + "size-12 sm:size-14"}
-              />*/}
-              <img src="/outlinr.webp" className="size-12" />
+              <div className="relative flex size-28 items-center justify-center transition-transform duration-200 group-hover:scale-110 sm:size-32">
+                {' '}
+                {/* Changed sizes here */}
+                <img
+                  src={feature.imageSrc}
+                  alt={feature.name}
+                  className="relative z-10 size-full object-contain"
+                />
+              </div>
               <span className="text-center text-xs font-medium text-gray-700 sm:text-sm">
                 {feature.name}
               </span>

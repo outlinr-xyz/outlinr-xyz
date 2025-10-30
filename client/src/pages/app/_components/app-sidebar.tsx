@@ -91,7 +91,7 @@ const AppSidebar = () => {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="text-xs capitalize opacity-60">
+      <SidebarFooter className="capitalize opacity-60">
         <SidebarMenu>
           {(state !== 'collapsed' || isMobile) &&
             sidebarItems.bottom.map((item) => {
@@ -100,7 +100,7 @@ const AppSidebar = () => {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>
-                      <span>{item.title}</span>
+                      <span className="text-xs">{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -116,11 +116,13 @@ const AppSidebar = () => {
             >
               <div className="flex cursor-pointer">
                 {isLoggingOut ? (
-                  <Loader2Icon className="animate-spin" />
+                  <Loader2Icon className="animate-spin text-sm" />
                 ) : (
                   <LogOutIcon />
                 )}
-                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
+                <span className="text-xs">
+                  {isLoggingOut ? 'Logging out...' : 'Logout'}
+                </span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
