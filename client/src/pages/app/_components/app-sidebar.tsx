@@ -1,5 +1,5 @@
 import { Loader2Icon, LogOutIcon } from 'lucide-react';
-import { memo, useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router';
 
 import { useIsMobile } from '@/components/hooks/use-mobile';
@@ -19,7 +19,7 @@ import { supabase } from '@/lib/supabase';
 import { cn, sidebarItems } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
 
-const AppSidebar = memo(function AppSidebar() {
+const AppSidebar = () => {
   const clearAuth = useAuthStore((s) => s.clear);
   const navigate = useNavigate();
   const { state } = useSidebar();
@@ -128,6 +128,6 @@ const AppSidebar = memo(function AppSidebar() {
       </SidebarFooter>
     </Sidebar>
   );
-});
+};
 
 export default AppSidebar;

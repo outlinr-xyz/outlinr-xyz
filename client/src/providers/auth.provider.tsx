@@ -28,6 +28,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     // Listen for auth state changes (signIn, signOut, etc.)
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (!mounted) return;
+
         // session will be null on signOut
         setSession(session);
         setUser(session?.user ?? null);
@@ -48,6 +50,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       mounted = false;
       authListener.subscription.unsubscribe();
     };
-  }, [setSession, setUser, setLoading, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return <>{children}</>;
 };

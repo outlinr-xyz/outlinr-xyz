@@ -1,5 +1,5 @@
 import { BellIcon, SearchIcon } from 'lucide-react';
-import { memo, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import { Button } from '@/components/ui/button';
@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
-const AppNavbar = memo(function AppNavbar() {
+const AppNavbar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
   const pathname = location.pathname;
@@ -96,6 +96,6 @@ const AppNavbar = memo(function AppNavbar() {
       </div>
     </nav>
   );
-});
+};
 
 export default AppNavbar;
