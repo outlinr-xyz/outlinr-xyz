@@ -5,6 +5,7 @@ This directory contains the API services and related functionality for managing 
 ## Overview
 
 The presentation features include:
+
 - Creating new presentations
 - Fetching recent presentations (top 3 most recently opened)
 - Paginated presentation listing (9 per page)
@@ -37,16 +38,18 @@ client/src/
 ## API Functions
 
 ### `createPresentation(input?)`
+
 Creates a new presentation and returns the created object.
 
 ```typescript
 const presentation = await createPresentation({
   title: 'My Presentation',
-  description: 'Optional description'
+  description: 'Optional description',
 });
 ```
 
 ### `getRecentPresentations()`
+
 Fetches the 3 most recently opened presentations, ordered by `last_opened_at` descending.
 
 ```typescript
@@ -54,6 +57,7 @@ const presentations = await getRecentPresentations();
 ```
 
 ### `getPresentations(page, pageSize)`
+
 Fetches paginated presentations (default 9 per page).
 
 ```typescript
@@ -62,16 +66,18 @@ const result = await getPresentations(1, 9);
 ```
 
 ### `updatePresentation(id, input)`
+
 Updates a presentation's metadata.
 
 ```typescript
 await updatePresentation(presentationId, {
   title: 'Updated Name',
-  thumbnail_url: 'https://...'
+  thumbnail_url: 'https://...',
 });
 ```
 
 ### `updateLastOpened(id)`
+
 Updates the `last_opened_at` timestamp (useful for tracking recent activity).
 
 ```typescript
@@ -79,6 +85,7 @@ await updateLastOpened(presentationId);
 ```
 
 ### `deletePresentation(id)`
+
 Permanently deletes a presentation.
 
 ```typescript
@@ -88,6 +95,7 @@ await deletePresentation(presentationId);
 ## React Hooks
 
 ### `useRecentPresentations()`
+
 Hook for fetching recent presentations with loading states.
 
 ```typescript
@@ -95,6 +103,7 @@ const { presentations, isLoading, error, refetch } = useRecentPresentations();
 ```
 
 ### `usePresentations(options)`
+
 Hook for fetching paginated presentations.
 
 ```typescript
@@ -106,22 +115,26 @@ const {
   page,
   setPage,
   hasMore,
-  total
+  total,
 } = usePresentations({ pageSize: 9 });
 ```
 
 ## Components
 
 ### `<NewPresentationButton />`
+
 Button that creates a new presentation and navigates to `/app/presentation/:id/question`.
 
 ### `<RecentPresentations />`
+
 Displays the 3 most recently opened presentations with loading skeletons.
 
 ### `<PresentationSkeleton />`
+
 Loading skeleton for individual presentation cards.
 
 ### `<PresentationSkeletonGrid count={n} />`
+
 Grid of loading skeletons (used during data fetching).
 
 ## Database Schema
@@ -156,6 +169,7 @@ execute FUNCTION update_updated_at_column ();
 ## Usage Examples
 
 ### Creating a new presentation
+
 ```typescript
 import { createPresentation } from '@/lib/api/presentations';
 import { useNavigate } from 'react-router';
@@ -166,24 +180,26 @@ navigate(`/app/presentation/${presentation.id}/question`);
 ```
 
 ### Home page (Recent 3)
+
 ```typescript
 import { useRecentPresentations } from '@/hooks/use-presentations';
 
 function HomePage() {
   const { presentations, isLoading } = useRecentPresentations();
-  
+
   if (isLoading) return <PresentationSkeletonGrid count={3} />;
   return <div>{/* Render presentations */}</div>;
 }
 ```
 
 ### Dashboard (Paginated)
+
 ```typescript
 import { usePresentations } from '@/hooks/use-presentations';
 
 function DashboardPage() {
   const { presentations, page, setPage, hasMore } = usePresentations({ pageSize: 9 });
-  
+
   return (
     <div>
       {/* Render presentations */}
@@ -213,6 +229,7 @@ The custom hooks handle errors internally and expose them via the `error` state.
 ## Authentication
 
 All API functions require an authenticated user. They use Supabase's `auth.getUser()` to:
+
 1. Verify the user is logged in
 2. Associate presentations with the correct user
 3. Filter presentations by user ownership
@@ -220,6 +237,7 @@ All API functions require an authenticated user. They use Supabase's `auth.getUs
 ## Loading States
 
 All pages using presentations show loading skeletons:
+
 - Home page: 3 skeletons (grid layout)
 - Dashboard: 9 skeletons (grid layout)
 
@@ -228,6 +246,7 @@ Skeletons match the aspect ratio and layout of actual presentation cards.
 ## Future Enhancements
 
 Potential improvements:
+
 - [ ] Search/filter presentations
 - [ ] Folders/categories
 - [ ] Sharing presentations
