@@ -1,19 +1,30 @@
 import { Loader2, Plus } from 'lucide-react';
-import { memo, useState } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
+import { createPresentation } from '@/lib/api/presentations';
 
-const NewPresentationButton = memo(function AppSidebar() {
+const NewPresentationButton = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleCreatePresentation = async () => {
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log('Presentation created successfully (mock)');
+      const presentation = await createPresentation({
+        title: 'Untitled Presentation',
+      });
+
+      toast.success('Presentation created successfully');
+
+      // Navigate to the question page
+      navigate(`/app/presentation/${presentation.id}/question`);
     } catch (error) {
-      console.error('Failed to create presentation (mock):', error);
+      console.error('Failed to create presentation:', error);
+      toast.error('Failed to create presentation. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -33,6 +44,6 @@ const NewPresentationButton = memo(function AppSidebar() {
       New Outline
     </Button>
   );
-});
+};
 
 export default NewPresentationButton;

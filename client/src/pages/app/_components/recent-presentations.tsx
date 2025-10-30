@@ -1,5 +1,4 @@
 import { LineChart, MoreHorizontal } from 'lucide-react';
-import { memo } from 'react';
 import { Link } from 'react-router';
 
 import {
@@ -9,87 +8,101 @@ import {
   ItemGroup,
   ItemTitle,
 } from '@/components/ui/item';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useRecentPresentations } from '@/hooks/use-presentations';
+import { formatTimeAgo } from '@/lib/utils';
 
-const presentations = [
-  {
-    id: '3',
-    name: 'Brand Strategy Q4',
-    image:
-      'https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop',
-    updated_at: '25-10-24',
-  },
-  {
-    id: '1',
-    name: 'New Product Launch',
-    image:
-      'https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop',
-    updated_at: '25-10-26',
-  },
-  {
-    id: '5',
-    name: 'UX/UI Re-design',
-    image:
-      'https://images.unsplash.com/photo-1650804068570-7fb2e3dbf888?q=80&w=640&auto=format&fit=crop',
-    updated_at: '25-10-22',
-  },
-];
+const RecentPresentations = () => {
+  const { presentations, isLoading, error } = useRecentPresentations();
 
-const RecentPresentations = memo(function RecentPresentations() {
   return (
     <section>
       <h2 className="mt-2 text-base font-medium md:mt-8">Recently Viewed</h2>
 
       <div className="w-full max-w-6xl">
-        <ItemGroup className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
-          {presentations.map((presentation) => (
-            <Item
-              key={presentation.id}
-              className="relative aspect-4/3 overflow-hidden rounded-md bg-cover bg-center"
-            >
-              <img
-                src={presentation.image}
-                alt={presentation.name}
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+        {isLoading ? (
+          <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div key={index} className="space-y-2">
+                <div className="relative aspect-4/3 overflow-hidden rounded-md">
+                  <Skeleton className="h-full w-full" />
+                </div>
+                <div className="mt-2 space-y-1 px-1">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-muted-foreground mt-4 text-center text-sm">
+            {error}
+          </div>
+        ) : presentations.length === 0 ? (
+          <div className="text-muted-foreground mt-4 text-center text-sm">
+            No presentations yet. Create your first one!
+          </div>
+        ) : (
+          <ItemGroup className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+            {presentations.map((presentation) => (
+              <div key={presentation.id} className="space-y-2">
+                <Link
+                  to={`/app/presentation/${presentation.id}/question`}
+                  className="block"
+                >
+                  <Item className="relative aspect-4/3 overflow-hidden rounded-md border bg-cover bg-center">
+                    {presentation.thumbnail_url ? (
+                      <img
+                        src={presentation.thumbnail_url}
+                        alt={presentation.title}
+                        loading="lazy"
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex h-full w-full items-center justify-center bg-gray-100">
+                        <img
+                          src="/outlinr.webp"
+                          alt="outlinr logo"
+                          className="h-16 w-16 opacity-20 grayscale"
+                        />
+                      </div>
+                    )}
 
-              <Link
-                to={`/app/presentation/${presentation.id}/results`}
-                className="absolute top-2 left-2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60"
-              >
-                <LineChart className="h-4 w-4" />
-              </Link>
+                    <Link
+                      to={`/app/presentation/${presentation.id}/results`}
+                      className="absolute top-2 left-2 rounded-full bg-white p-2 text-gray-700 shadow-xs"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <LineChart className="h-4 w-4" />
+                    </Link>
 
-              <button className="absolute top-2 right-2 rounded-full bg-black/40 p-2 text-white hover:bg-black/60">
-                <MoreHorizontal className="h-4 w-4" />
-              </button>
+                    <button
+                      className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700 shadow-xs"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  </Item>
 
-              <Link
-                to={`/app/presentation/${presentation.id}`}
-                className="absolute right-0 bottom-0 left-0 bg-linear-to-t from-black/80 to-transparent p-3 text-white sm:p-4"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 overflow-hidden sm:gap-3">
+                  <div className="mt-2 px-1">
                     <ItemContent className="min-w-0">
-                      <ItemTitle className="truncate text-sm capitalize">
-                        {presentation.name}
+                      <ItemTitle className="truncate text-sm font-medium text-gray-900">
+                        {presentation.title}
                       </ItemTitle>
 
-                      <ItemDescription className="truncate text-xs text-gray-300 sm:text-sm">
-                        <span className="hidden lg:inline">Edited: </span>
-
-                        {presentation.updated_at}
+                      <ItemDescription className="text-muted-foreground truncate text-xs sm:text-sm">
+                        {formatTimeAgo(presentation.last_opened_at)}
                       </ItemDescription>
                     </ItemContent>
                   </div>
-                </div>
-              </Link>
-            </Item>
-          ))}
-        </ItemGroup>
+                </Link>
+              </div>
+            ))}
+          </ItemGroup>
+        )}
       </div>
     </section>
   );
-});
+};
 
 export default RecentPresentations;
