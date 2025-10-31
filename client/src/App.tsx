@@ -1,9 +1,9 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router';
 
+import PageLoader from './components/page-loader';
 import { ProtectedRoute } from './components/protected-routes';
 
-// Lazy load all page components
 const PublicLayout = lazy(() => import('./pages/(public)/layout'));
 const PublicPage = lazy(() => import('./pages/(public)/page'));
 const PricingPage = lazy(() => import('./pages/(public)/pricing/page'));
@@ -41,13 +41,6 @@ const PresentPage = lazy(
 const JoinPage = lazy(() => import('./pages/app/presentation/[id]/join/page'));
 
 const NotFoundPage = lazy(() => import('./pages/app/not-found'));
-
-// Loading fallback component
-const PageLoader = () => (
-  <div className="flex h-screen items-center justify-center">
-    <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600" />
-  </div>
-);
 
 export default function App() {
   return (
