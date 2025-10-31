@@ -13,7 +13,7 @@ const HomePage = () => {
   return (
     <>
       <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
-        Welcome {displayName.split(' ')[0]}
+        Welcome, {displayName}!
       </h1>
 
       <div className="flex flex-wrap items-center gap-3">

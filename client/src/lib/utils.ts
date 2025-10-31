@@ -88,7 +88,7 @@ export const oauthProviders = [
 
 export const popularFeatures = [
   {
-    name: 'Word cloud',
+    name: 'Word Cloud',
     icon: Shapes,
     color: 'text-red-500',
     imageSrc: '/word-cloud.webp',
