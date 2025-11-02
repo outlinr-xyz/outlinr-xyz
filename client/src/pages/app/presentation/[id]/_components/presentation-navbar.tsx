@@ -1,26 +1,14 @@
-import {
-  ArrowLeftIcon,
-  CloudIcon,
-  CloudOffIcon,
-  LinkIcon,
-  Loader2Icon,
-} from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { toast } from 'sonner';
+import { ArrowLeftIcon, CloudIcon, CloudOffIcon, LinkIcon, Loader2Icon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { getPresentation, updatePresentation } from '@/lib/api/presentations';
-import { cn } from '@/lib/utils';
-import { useUser, useUserDisplayName } from '@/store/auth.store';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { getPresentation, updatePresentation } from "@/lib/api/presentations";
+import { cn } from "@/lib/utils";
+import { useUser, useUserDisplayName } from "@/store/auth.store";
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
