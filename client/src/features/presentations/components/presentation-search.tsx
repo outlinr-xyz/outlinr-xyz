@@ -1,7 +1,14 @@
-import { Search, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { SearchIcon, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ButtonGroup } from '@/components/ui/button-group';
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group';
+import { Kbd } from '@/components/ui/kbd';
 
 interface PresentationSearchProps {
   value: string;
@@ -17,6 +24,7 @@ const PresentationSearch = ({
   className = '',
 }: PresentationSearchProps) => {
   const [localValue, setLocalValue] = useState(value);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Debounce the search input
   useEffect(() => {
@@ -32,30 +40,59 @@ const PresentationSearch = ({
     setLocalValue(value);
   }, [value]);
 
+  // Keyboard shortcut: Cmd/Ctrl + K
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      const isMac = navigator.platform.toUpperCase().includes('MAC');
+      const isModifierPressed = isMac ? e.metaKey : e.ctrlKey;
+      if (isModifierPressed && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleClear = () => {
     setLocalValue('');
     onChange('');
+    inputRef.current?.focus();
   };
 
   return (
-    <div className={`relative ${className}`}>
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-      <Input
-        type="text"
-        placeholder={placeholder}
-        value={localValue}
-        onChange={(e) => setLocalValue(e.target.value)}
-        className="pl-9 pr-9"
-      />
-      {localValue && (
-        <button
-          onClick={handleClear}
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-          aria-label="Clear search"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      )}
+    <div className={`flex w-full max-w-md flex-col gap-6 ${className}`}>
+      <ButtonGroup aria-label="Search control group">
+        <InputGroup>
+          <InputGroupInput
+            ref={inputRef}
+            placeholder={placeholder}
+            value={localValue}
+            onChange={(e) => setLocalValue(e.target.value)}
+          />
+          <InputGroupAddon
+            align="inline-start"
+            className="hidden space-x-1 md:inline-block"
+          >
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </InputGroupAddon>
+        </InputGroup>
+        {localValue ? (
+          <Button
+            variant="outline"
+            aria-label="Clear search"
+            onClick={handleClear}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button variant="outline" aria-label="Search">
+            <SearchIcon className="h-4 w-4" />
+          </Button>
+        )}
+      </ButtonGroup>
     </div>
   );
 };

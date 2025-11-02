@@ -103,8 +103,8 @@ const TrashActions = ({ presentationId, onAction }: TrashActionsProps) => {
           <AlertDialogHeader>
             <AlertDialogTitle>Permanently Delete?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This presentation will be permanently
-              deleted from your account.
+              This action cannot be undone. This presentation will be
+              permanently deleted from your account.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
