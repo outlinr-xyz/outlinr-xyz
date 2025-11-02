@@ -1,11 +1,13 @@
 import { Folder, Grid3x3, List } from 'lucide-react';
+import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EmptyState, PresentationList } from '@/features/presentations';
+import PresentationSearch from '@/features/presentations/components/presentation-search';
 import { usePresentations } from '@/hooks/use-presentations';
-import { formatDate } from '@/lib/utils';
+import { filterPresentations, formatDate } from '@/lib/utils';
 import {
   usePresentationView,
   useSetPresentationView,
@@ -29,6 +31,12 @@ const DashboardPage = () => {
   // Use persisted view preference
   const view = usePresentationView();
   const setView = useSetPresentationView();
+
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Filter presentations based on search
+  const filteredPresentations = filterPresentations(presentations, searchQuery);
 
   const handlePreviousPage = () => {
     if (page > 1) {
@@ -117,14 +125,25 @@ const DashboardPage = () => {
         </div>
       </div>
 
+      {/* Search */}
+      <PresentationSearch
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search by title..."
+      />
+
       <div className="w-full max-w-6xl">
         {error ? (
           <EmptyState message={error} />
+        ) : searchQuery && filteredPresentations.length === 0 ? (
+          <EmptyState
+            message={`No presentations found matching "${searchQuery}"`}
+          />
         ) : presentations.length === 0 && !isLoading ? (
           <EmptyState message="No presentations yet. Create your first one!" />
         ) : (
           <PresentationList
-            presentations={presentations}
+            presentations={filteredPresentations}
             isLoading={isLoading}
             view={view}
             getHref={getHref}

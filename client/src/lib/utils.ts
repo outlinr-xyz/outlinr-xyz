@@ -195,6 +195,28 @@ export function shouldPermanentlyDelete(deletedAt: string): boolean {
 }
 
 /**
+ * Filter presentations by search query
+ */
+export function filterPresentations<
+  T extends { title: string; description?: string | null },
+>(presentations: T[], searchQuery: string): T[] {
+  if (!searchQuery.trim()) {
+    return presentations;
+  }
+
+  const query = searchQuery.toLowerCase().trim();
+
+  return presentations.filter((presentation) => {
+    const titleMatch = presentation.title.toLowerCase().includes(query);
+    const descriptionMatch = presentation.description
+      ? presentation.description.toLowerCase().includes(query)
+      : false;
+
+    return titleMatch || descriptionMatch;
+  });
+}
+
+/**
  * Format a date as short date (e.g., "01/15/24")
  */
 export function formatShortDate(dateString: string): string {

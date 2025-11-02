@@ -1,14 +1,17 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/features/presentations';
+import PresentationSearch from '@/features/presentations/components/presentation-search';
 import TrashListItem from '@/features/presentations/components/trash-list-item';
 import { useDeletedPresentations } from '@/hooks/use-presentations';
 import { cleanupOldDeletedPresentations } from '@/lib/api/presentations';
+import { filterPresentations } from '@/lib/utils';
 
 const TrashPage = () => {
   const { presentations, isLoading, error, refetch } =
     useDeletedPresentations();
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Cleanup old presentations on mount
   useEffect(() => {
@@ -27,6 +30,9 @@ const TrashPage = () => {
     cleanup();
   }, [refetch]);
 
+  // Filter presentations based on search
+  const filteredPresentations = filterPresentations(presentations, searchQuery);
+
   return (
     <>
       <div className="flex flex-col gap-2">
@@ -43,6 +49,15 @@ const TrashPage = () => {
           </p>
         )}
       </div>
+
+      {/* Search */}
+      {presentations.length > 0 && !isLoading && (
+        <PresentationSearch
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search trash..."
+        />
+      )}
 
       <div className="w-full max-w-6xl">
         {isLoading ? (
@@ -66,11 +81,15 @@ const TrashPage = () => {
           </div>
         ) : error ? (
           <EmptyState message={error} />
+        ) : searchQuery && filteredPresentations.length === 0 ? (
+          <EmptyState
+            message={`No presentations found matching "${searchQuery}"`}
+          />
         ) : presentations.length === 0 ? (
           <EmptyState message="No deleted presentations. Items will be automatically deleted 30 days after being moved to trash." />
         ) : (
           <div className="space-y-2">
-            {presentations.map((presentation) => (
+            {filteredPresentations.map((presentation) => (
               <TrashListItem
                 key={presentation.id}
                 presentation={presentation}
