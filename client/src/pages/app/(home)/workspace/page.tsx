@@ -20,7 +20,7 @@ const WorkSpacePage = () => {
       <PresentationSearch
         value={searchQuery}
         onChange={setSearchQuery}
-        placeholder="Search workspace presentations..."
+        placeholder="Search workspace..."
       />
 
       <div className="w-full max-w-6xl">

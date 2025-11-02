@@ -49,16 +49,12 @@ const TrashPage = () => {
           </p>
         )}
       </div>
-
       {/* Search */}
-      {presentations.length > 0 && !isLoading && (
-        <PresentationSearch
-          value={searchQuery}
-          onChange={setSearchQuery}
-          placeholder="Search trash..."
-        />
-      )}
-
+      <PresentationSearch
+        value={searchQuery}
+        onChange={setSearchQuery}
+        placeholder="Search trash..."
+      />
       <div className="w-full max-w-6xl">
         {isLoading ? (
           <div className="space-y-2">
