@@ -13,8 +13,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from '@/components/ui/sidebar';
+import { useSidebar } from '@/components/ui/sidebar.lib';
 import { supabase } from '@/lib/supabase';
 import { cn, sidebarItems } from '@/lib/utils';
 import { useAuthStore } from '@/store/auth.store';
