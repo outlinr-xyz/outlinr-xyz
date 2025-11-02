@@ -108,3 +108,45 @@ export function useRecentPresentations(): UseRecentPresentationsReturn {
     refetch: fetchPresentations,
   };
 }
+
+interface UseDeletedPresentationsReturn {
+  presentations: Presentation[];
+  isLoading: boolean;
+  error: string | null;
+  refetch: () => Promise<void>;
+}
+
+export function useDeletedPresentations(): UseDeletedPresentationsReturn {
+  const [presentations, setPresentations] = useState<Presentation[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchPresentations = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const { getDeletedPresentations } = await import(
+        '@/lib/api/presentations'
+      );
+      const data = await getDeletedPresentations();
+      setPresentations(data);
+    } catch (err) {
+      console.error('Failed to fetch deleted presentations:', err);
+      setError('Failed to load deleted presentations');
+      setPresentations([]);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchPresentations();
+  }, [fetchPresentations]);
+
+  return {
+    presentations,
+    isLoading,
+    error,
+    refetch: fetchPresentations,
+  };
+}

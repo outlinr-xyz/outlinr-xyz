@@ -4,7 +4,7 @@ import { formatTimeAgo } from '@/lib/utils';
 import type { Presentation } from '@/types/presentation';
 
 const RecentPresentations = () => {
-  const { presentations, isLoading, error } = useRecentPresentations();
+  const { presentations, isLoading, error, refetch } = useRecentPresentations();
 
   const getHref = (presentation: Presentation) =>
     `/app/presentation/${presentation.id}/question`;
@@ -30,6 +30,7 @@ const RecentPresentations = () => {
               getHref={getHref}
               getMetadata={getMetadata}
               skeletonCount={3}
+              onDelete={refetch}
             />
           </div>
         )}

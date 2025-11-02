@@ -1,3 +1,4 @@
+import { LineChart } from 'lucide-react';
 import { Link } from 'react-router';
 
 import type { Presentation } from '@/types/presentation';
@@ -8,15 +9,20 @@ interface PresentationListItemProps {
   presentation: Presentation;
   href: string;
   metadata: string;
+  onDelete?: () => void;
 }
 
 const PresentationListItem = ({
   presentation,
   href,
   metadata,
+  onDelete,
 }: PresentationListItemProps) => {
   return (
-    <Link to={href} className="flex items-center gap-4 rounded-md bg-white p-4">
+    <Link
+      to={href}
+      className="flex items-center gap-4 rounded-md bg-white p-4 hover:bg-gray-50"
+    >
       {/* Thumbnail */}
       <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-md">
         {presentation.thumbnail_url ? (
@@ -48,10 +54,24 @@ const PresentationListItem = ({
       </div>
 
       {/* Action Buttons */}
-      <PresentationCardActions
-        presentationId={presentation.id}
-        variant="list"
-      />
+      <div
+        className="flex items-center gap-2"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <Link
+          to={`/app/presentation/${presentation.id}/results`}
+          className="rounded-md p-2 text-gray-700 hover:bg-gray-100"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <LineChart className="h-4 w-4" />
+        </Link>
+
+        <PresentationCardActions
+          presentationId={presentation.id}
+          variant="list"
+          onDelete={onDelete}
+        />
+      </div>
     </Link>
   );
 };

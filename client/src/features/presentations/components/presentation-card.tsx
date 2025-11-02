@@ -1,6 +1,12 @@
+import { LineChart } from 'lucide-react';
 import { Link } from 'react-router';
 
-import { Item, ItemContent, ItemDescription, ItemTitle } from '@/components/ui/item';
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from '@/components/ui/item';
 import type { Presentation } from '@/types/presentation';
 
 import PresentationCardActions from './presentation-card-actions';
@@ -10,12 +16,14 @@ interface PresentationCardProps {
   presentation: Presentation;
   href: string;
   metadata: string;
+  onDelete?: () => void;
 }
 
 const PresentationCard = ({
   presentation,
   href,
   metadata,
+  onDelete,
 }: PresentationCardProps) => {
   return (
     <div className="space-y-2">
@@ -26,14 +34,18 @@ const PresentationCard = ({
             title={presentation.title}
           />
 
-          <PresentationCardActions
-            presentationId={presentation.id}
-            variant="grid"
-          />
+          {/* Analytics button - top left */}
+          <Link
+            to={`/app/presentation/${presentation.id}/results`}
+            className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700 shadow-sm hover:bg-gray-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LineChart className="h-4 w-4" />
+          </Link>
         </Item>
 
-        <div className="mt-2 px-1">
-          <ItemContent className="min-w-0">
+        <div className="mt-2 flex items-start justify-between gap-2 px-1">
+          <ItemContent className="min-w-0 flex-1">
             <ItemTitle className="truncate text-sm font-medium text-gray-900">
               {presentation.title}
             </ItemTitle>
@@ -42,6 +54,15 @@ const PresentationCard = ({
               {metadata}
             </ItemDescription>
           </ItemContent>
+
+          {/* Three dots menu - bottom right aligned with text */}
+          <div onClick={(e) => e.stopPropagation()}>
+            <PresentationCardActions
+              presentationId={presentation.id}
+              variant="grid"
+              onDelete={onDelete}
+            />
+          </div>
         </div>
       </Link>
     </div>

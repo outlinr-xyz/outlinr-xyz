@@ -5,3 +5,5 @@ export { default as PresentationCardSkeleton } from './components/presentation-c
 export { default as PresentationList } from './components/presentation-list';
 export { default as PresentationListItem } from './components/presentation-list-item';
 export { default as PresentationThumbnail } from './components/presentation-thumbnail';
+export { default as TrashActions } from './components/trash-actions';
+export { default as TrashListItem } from './components/trash-list-item';

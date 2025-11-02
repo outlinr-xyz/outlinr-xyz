@@ -12,8 +12,16 @@ import type { Presentation } from '@/types/presentation';
 import NewPresentationButton from '../../_components/new-presentation-button';
 
 const DashboardPage = () => {
-  const { presentations, isLoading, error, page, setPage, hasMore, total } =
-    usePresentations({ pageSize: 6 });
+  const {
+    presentations,
+    isLoading,
+    error,
+    page,
+    setPage,
+    hasMore,
+    total,
+    refetch,
+  } = usePresentations({ pageSize: 6 });
   const [view, setView] = useState<'grid' | 'list'>('grid');
 
   const handlePreviousPage = () => {
@@ -116,6 +124,7 @@ const DashboardPage = () => {
             getHref={getHref}
             getMetadata={getMetadata}
             skeletonCount={6}
+            onDelete={refetch}
           />
         )}
       </div>

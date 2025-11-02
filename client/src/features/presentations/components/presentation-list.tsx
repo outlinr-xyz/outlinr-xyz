@@ -12,6 +12,7 @@ interface PresentationListProps {
   getHref: (presentation: Presentation) => string;
   getMetadata: (presentation: Presentation) => string;
   skeletonCount?: number;
+  onDelete?: () => void;
 }
 
 const PresentationList = ({
@@ -21,6 +22,7 @@ const PresentationList = ({
   getHref,
   getMetadata,
   skeletonCount = 6,
+  onDelete,
 }: PresentationListProps) => {
   if (isLoading) {
     return view === 'grid' ? (
@@ -47,6 +49,7 @@ const PresentationList = ({
             presentation={presentation}
             href={getHref(presentation)}
             metadata={getMetadata(presentation)}
+            onDelete={onDelete}
           />
         ))}
       </ItemGroup>
@@ -61,6 +64,7 @@ const PresentationList = ({
           presentation={presentation}
           href={getHref(presentation)}
           metadata={getMetadata(presentation)}
+          onDelete={onDelete}
         />
       ))}
     </div>

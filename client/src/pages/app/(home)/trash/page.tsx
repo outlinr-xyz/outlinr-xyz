@@ -1,9 +1,64 @@
-import { memo } from 'react';
+import { EmptyState } from '@/features/presentations';
+import TrashListItem from '@/features/presentations/components/trash-list-item';
+import { useDeletedPresentations } from '@/hooks/use-presentations';
 
-const TrashPage = memo(function TrashPage() {
+const TrashPage = () => {
+  const { presentations, isLoading, error, refetch } =
+    useDeletedPresentations();
+
   return (
-    <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">Trash</h1>
+    <>
+      <div className="flex flex-col gap-2">
+        <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
+          Trash
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          {isLoading
+            ? 'Loading...'
+            : presentations.length > 0
+              ? `${presentations.length} ${presentations.length === 1 ? 'presentation' : 'presentations'} in trash`
+              : 'Your trash is empty'}
+        </p>
+      </div>
+
+      <div className="w-full max-w-6xl">
+        {isLoading ? (
+          <div className="space-y-2">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-4 rounded-md bg-white p-4"
+              >
+                <div className="h-16 w-24 shrink-0 animate-pulse rounded-md bg-gray-200" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
+                  <div className="h-3 w-1/2 animate-pulse rounded bg-gray-200" />
+                </div>
+                <div className="flex gap-2">
+                  <div className="h-9 w-24 animate-pulse rounded-md bg-gray-200" />
+                  <div className="h-9 w-32 animate-pulse rounded-md bg-gray-200" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <EmptyState message={error} />
+        ) : presentations.length === 0 ? (
+          <EmptyState message="No deleted presentations. Deleted presentations will appear here." />
+        ) : (
+          <div className="space-y-2">
+            {presentations.map((presentation) => (
+              <TrashListItem
+                key={presentation.id}
+                presentation={presentation}
+                onAction={refetch}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </>
   );
-});
+};
 
 export default TrashPage;
