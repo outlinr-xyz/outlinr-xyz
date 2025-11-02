@@ -66,8 +66,8 @@ const PresentationCardActions = ({
 
   const buttonClasses =
     variant === 'grid'
-      ? 'rounded-md p-1.5 text-gray-600 hover:bg-white/80 hover:text-gray-900 transition-colors'
-      : 'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900';
+      ? 'rounded-md p-1.5 text-gray-600 hover:bg-white/80 hover:text-gray-900 transition-colors cursor-pointer'
+      : 'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer';
 
   return (
     <>
