@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { useEffect } from 'react';
+import { Outlet, useParams } from 'react-router-dom';
 
-import { updateLastOpened } from "@/lib/api/presentations";
+import { updateLastOpened } from '@/lib/api/presentations';
 
-import PresentationNavbar from "./_components/presentation-navbar";
+import PresentationNavbar from './_components/presentation-navbar';
 
 export default function PresentationLayout() {
   const { id } = useParams<{ id: string }>();
