@@ -26,15 +26,15 @@ const PresentationCard = ({
   onDelete,
 }: PresentationCardProps) => {
   return (
-    <div className="space-y-2">
+    <div className="group space-y-2">
       <Link to={href} className="block">
-        <Item className="relative aspect-4/3 overflow-hidden rounded-md border bg-cover bg-center">
+        <Item className="relative aspect-4/3 overflow-hidden rounded-md bg-cover bg-center">
           <PresentationThumbnail
             thumbnailUrl={presentation.thumbnail_url}
             title={presentation.title}
           />
 
-          {/* Analytics button - top left */}
+          {/* Analytics button - top right */}
           <Link
             to={`/app/presentation/${presentation.id}/results`}
             className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700 shadow-sm hover:bg-gray-50"
@@ -55,8 +55,11 @@ const PresentationCard = ({
             </ItemDescription>
           </ItemContent>
 
-          {/* Three dots menu - bottom right aligned with text */}
-          <div onClick={(e) => e.stopPropagation()}>
+          {/* Three dots menu - bottom right aligned with text, only visible on hover */}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="opacity-0 transition-opacity group-hover:opacity-100"
+          >
             <PresentationCardActions
               presentationId={presentation.id}
               variant="grid"

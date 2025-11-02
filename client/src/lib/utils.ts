@@ -156,6 +156,45 @@ export function formatDate(dateString: string): string {
 }
 
 /**
+ * Calculate days remaining until permanent deletion (30 days from deletion)
+ */
+export function getDaysUntilPermanentDeletion(deletedAt: string): number {
+  const deletionDate = new Date(deletedAt);
+  const permanentDeletionDate = new Date(deletionDate);
+  permanentDeletionDate.setDate(permanentDeletionDate.getDate() + 30);
+
+  const now = new Date();
+  const daysRemaining = Math.ceil(
+    (permanentDeletionDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+  );
+
+  return Math.max(0, daysRemaining);
+}
+
+/**
+ * Format trash item metadata with days remaining
+ */
+export function formatTrashItemMetadata(deletedAt: string): string {
+  const daysRemaining = getDaysUntilPermanentDeletion(deletedAt);
+  const deletionDate = formatDate(deletedAt);
+
+  if (daysRemaining === 0) {
+    return `Deleted ${deletionDate} • Deleting today`;
+  } else if (daysRemaining === 1) {
+    return `Deleted ${deletionDate} • 1 day left`;
+  } else {
+    return `Deleted ${deletionDate} • ${daysRemaining} days left`;
+  }
+}
+
+/**
+ * Check if a presentation should be permanently deleted (30+ days in trash)
+ */
+export function shouldPermanentlyDelete(deletedAt: string): boolean {
+  return getDaysUntilPermanentDeletion(deletedAt) === 0;
+}
+
+/**
  * Format a date as short date (e.g., "01/15/24")
  */
 export function formatShortDate(dateString: string): string {

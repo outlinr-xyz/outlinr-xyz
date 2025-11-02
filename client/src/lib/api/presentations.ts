@@ -243,3 +243,33 @@ export async function getDeletedPresentations(): Promise<Presentation[]> {
 
   return data || [];
 }
+
+/**
+ * Automatically delete presentations that have been in trash for 30+ days
+ */
+export async function cleanupOldDeletedPresentations(): Promise<number> {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const { data, error } = await supabase
+    .from('presentations')
+    .delete()
+    .eq('user_id', user.id)
+    .not('deleted_at', 'is', null)
+    .lt('deleted_at', thirtyDaysAgo.toISOString())
+    .select('id');
+
+  if (error) {
+    throw new Error(`Failed to cleanup old presentations: ${error.message}`);
+  }
+
+  return data?.length || 0;
+}

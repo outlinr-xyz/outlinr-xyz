@@ -1,10 +1,31 @@
+import { useEffect } from 'react';
+
+import { Skeleton } from '@/components/ui/skeleton';
 import { EmptyState } from '@/features/presentations';
 import TrashListItem from '@/features/presentations/components/trash-list-item';
 import { useDeletedPresentations } from '@/hooks/use-presentations';
+import { cleanupOldDeletedPresentations } from '@/lib/api/presentations';
 
 const TrashPage = () => {
   const { presentations, isLoading, error, refetch } =
     useDeletedPresentations();
+
+  // Cleanup old presentations on mount
+  useEffect(() => {
+    const cleanup = async () => {
+      try {
+        const deletedCount = await cleanupOldDeletedPresentations();
+        if (deletedCount > 0) {
+          // Refresh the list after cleanup
+          refetch();
+        }
+      } catch (err) {
+        console.error('Failed to cleanup old presentations:', err);
+      }
+    };
+
+    cleanup();
+  }, [refetch]);
 
   return (
     <>
@@ -12,13 +33,15 @@ const TrashPage = () => {
         <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">
           Trash
         </h1>
-        <p className="text-muted-foreground text-sm">
-          {isLoading
-            ? 'Loading...'
-            : presentations.length > 0
-              ? `${presentations.length} ${presentations.length === 1 ? 'presentation' : 'presentations'} in trash`
+        {isLoading ? (
+          <Skeleton className="h-5 w-48" />
+        ) : (
+          <p className="text-muted-foreground text-sm">
+            {presentations.length > 0
+              ? `${presentations.length} ${presentations.length === 1 ? 'presentation' : 'presentations'} in trash • Items deleted after 30 days`
               : 'Your trash is empty'}
-        </p>
+          </p>
+        )}
       </div>
 
       <div className="w-full max-w-6xl">
@@ -44,7 +67,7 @@ const TrashPage = () => {
         ) : error ? (
           <EmptyState message={error} />
         ) : presentations.length === 0 ? (
-          <EmptyState message="No deleted presentations. Deleted presentations will appear here." />
+          <EmptyState message="No deleted presentations. Items will be automatically deleted 30 days after being moved to trash." />
         ) : (
           <div className="space-y-2">
             {presentations.map((presentation) => (

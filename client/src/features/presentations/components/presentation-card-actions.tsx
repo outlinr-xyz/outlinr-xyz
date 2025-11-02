@@ -1,6 +1,5 @@
-import { Eye, MoreVertical, Trash2 } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 import {
@@ -32,14 +31,14 @@ const PresentationCardActions = ({
   variant = 'grid',
   onDelete,
 }: PresentationCardActionsProps) => {
-  const navigate = useNavigate();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const handlePreview = (e: React.MouseEvent) => {
+  const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(`/app/presentation/${presentationId}/preview`);
+    // TODO: Implement share functionality
+    toast.info('Share functionality coming soon');
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -67,8 +66,8 @@ const PresentationCardActions = ({
 
   const buttonClasses =
     variant === 'grid'
-      ? 'rounded-md bg-white p-1.5 text-gray-700 shadow-sm hover:bg-gray-50'
-      : 'rounded-md p-1.5 text-gray-700 hover:bg-gray-100';
+      ? 'rounded-md p-1.5 text-gray-600 hover:bg-white/80 hover:text-gray-900 transition-colors'
+      : 'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900';
 
   return (
     <>
@@ -80,15 +79,11 @@ const PresentationCardActions = ({
           <MoreVertical className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenuItem onClick={handlePreview}>
-            <Eye className="mr-2 h-4 w-4" />
-            Preview
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleShare}>Share</DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteClick}
             className="text-red-600"
           >
-            <Trash2 className="mr-2 h-4 w-4" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -100,7 +95,7 @@ const PresentationCardActions = ({
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
               This presentation will be moved to trash. You can restore it later
-              or delete it permanently from the trash.
+              or it will be permanently deleted after 30 days.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -1,5 +1,4 @@
 import { Folder, Grid3x3, List } from 'lucide-react';
-import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -7,6 +6,10 @@ import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
 import { EmptyState, PresentationList } from '@/features/presentations';
 import { usePresentations } from '@/hooks/use-presentations';
 import { formatDate } from '@/lib/utils';
+import {
+  usePresentationView,
+  useSetPresentationView,
+} from '@/store/preferences.store';
 import type { Presentation } from '@/types/presentation';
 
 import NewPresentationButton from '../../_components/new-presentation-button';
@@ -22,7 +25,10 @@ const DashboardPage = () => {
     total,
     refetch,
   } = usePresentations({ pageSize: 6 });
-  const [view, setView] = useState<'grid' | 'list'>('grid');
+
+  // Use persisted view preference
+  const view = usePresentationView();
+  const setView = useSetPresentationView();
 
   const handlePreviousPage = () => {
     if (page > 1) {

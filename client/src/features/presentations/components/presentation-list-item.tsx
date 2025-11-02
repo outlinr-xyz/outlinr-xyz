@@ -21,7 +21,7 @@ const PresentationListItem = ({
   return (
     <Link
       to={href}
-      className="flex items-center gap-4 rounded-md bg-white p-4 hover:bg-gray-50"
+      className="group flex items-center gap-4 rounded-md bg-white p-4 hover:bg-gray-50"
     >
       {/* Thumbnail */}
       <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-md">
@@ -53,14 +53,14 @@ const PresentationListItem = ({
         </p>
       </div>
 
-      {/* Action Buttons */}
+      {/* Action Buttons - only visible on hover */}
       <div
-        className="flex items-center gap-2"
+        className="flex items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100"
         onClick={(e) => e.stopPropagation()}
       >
         <Link
           to={`/app/presentation/${presentation.id}/results`}
-          className="rounded-md p-2 text-gray-700 hover:bg-gray-100"
+          className="rounded-md p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
           onClick={(e) => e.stopPropagation()}
         >
           <LineChart className="h-4 w-4" />

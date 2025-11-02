@@ -1,3 +1,4 @@
+import { formatTrashItemMetadata } from '@/lib/utils';
 import type { Presentation } from '@/types/presentation';
 
 import TrashActions from './trash-actions';
@@ -36,14 +37,9 @@ const TrashListItem = ({ presentation, onAction }: TrashListItemProps) => {
           {presentation.title}
         </h3>
         <p className="text-muted-foreground truncate text-xs sm:text-sm">
-          Deleted{' '}
           {presentation.deleted_at
-            ? new Date(presentation.deleted_at).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: 'numeric',
-              })
-            : 'recently'}
+            ? formatTrashItemMetadata(presentation.deleted_at)
+            : 'Recently deleted • 30 days left'}
         </p>
       </div>
 
