@@ -1,0 +1,59 @@
+import { Link } from 'react-router';
+
+import type { Presentation } from '@/types/presentation';
+
+import PresentationCardActions from './presentation-card-actions';
+
+interface PresentationListItemProps {
+  presentation: Presentation;
+  href: string;
+  metadata: string;
+}
+
+const PresentationListItem = ({
+  presentation,
+  href,
+  metadata,
+}: PresentationListItemProps) => {
+  return (
+    <Link to={href} className="flex items-center gap-4 rounded-md bg-white p-4">
+      {/* Thumbnail */}
+      <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-md">
+        {presentation.thumbnail_url ? (
+          <img
+            src={presentation.thumbnail_url}
+            alt={presentation.title}
+            loading="lazy"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-gray-100">
+            <img
+              src="/outlinr.webp"
+              alt="outlinr logo"
+              className="h-8 w-8 opacity-20 grayscale"
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Title and Date */}
+      <div className="flex min-w-0 flex-1 flex-col">
+        <h3 className="truncate text-sm font-medium text-gray-900">
+          {presentation.title}
+        </h3>
+        <p className="text-muted-foreground truncate text-xs sm:text-sm">
+          {metadata}
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <PresentationCardActions
+        presentationId={presentation.id}
+        variant="list"
+      />
+    </Link>
+  );
+};
+
+export default PresentationListItem;
