@@ -1,7 +1,7 @@
-import discordIcon from '../../src/assets/icons/discord.svg';
-import googleIcon from '../../src/assets/icons/google.svg';
-import linkedinIcon from '../../src/assets/icons/linkedin.svg';
-import microsoftIcon from '../../src/assets/icons/microsoft.svg';
+import discordIcon from '/discord.svg';
+import googleIcon from '/google.svg';
+import linkedinIcon from '/linkedin.svg';
+import microsoftIcon from '/microsoft.svg';
 
 /**
  * Authentication-related constants
@@ -11,7 +11,6 @@ export const oauthProviders = [
   {
     provider: 'google',
     name: 'Google',
-    // 2. Use the imported variable instead of the static string path.
     icon: googleIcon,
   },
   {
