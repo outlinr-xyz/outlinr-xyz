@@ -4,8 +4,6 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group';
-import { EmptyState, PresentationList } from '@/features/presentations';
-import PresentationSearch from '@/features/presentations/components/presentation-search';
 import { usePresentations } from '@/hooks/use-presentations';
 import { filterPresentations, formatDate } from '@/lib/utils';
 import {
@@ -14,7 +12,10 @@ import {
 } from '@/store/preferences.store';
 import type { Presentation } from '@/types/presentation';
 
+import EmptyState from '../../_components/empty-state';
 import NewPresentationButton from '../../_components/new-presentation-button';
+import PresentationList from '../../_components/presentation-list';
+import PresentationSearch from '../../_components/presentation-search';
 
 const DashboardPage = () => {
   const {

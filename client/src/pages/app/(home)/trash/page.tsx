@@ -1,25 +1,24 @@
 import { useEffect, useState } from 'react';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { EmptyState } from '@/features/presentations';
-import PresentationSearch from '@/features/presentations/components/presentation-search';
-import TrashListItem from '@/features/presentations/components/trash-list-item';
 import { useDeletedPresentations } from '@/hooks/use-presentations';
 import { cleanupOldDeletedPresentations } from '@/lib/api/presentations';
 import { filterPresentations } from '@/lib/utils';
+
+import EmptyState from '../../_components/empty-state';
+import PresentationSearch from '../../_components/presentation-search';
+import TrashListItem from '../../_components/trash-list-item';
 
 const TrashPage = () => {
   const { presentations, isLoading, error, refetch } =
     useDeletedPresentations();
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Cleanup old presentations on mount
   useEffect(() => {
     const cleanup = async () => {
       try {
         const deletedCount = await cleanupOldDeletedPresentations();
         if (deletedCount > 0) {
-          // Refresh the list after cleanup
           refetch();
         }
       } catch (err) {
@@ -30,7 +29,6 @@ const TrashPage = () => {
     cleanup();
   }, [refetch]);
 
-  // Filter presentations based on search
   const filteredPresentations = filterPresentations(presentations, searchQuery);
 
   return (
@@ -49,7 +47,6 @@ const TrashPage = () => {
           </p>
         )}
       </div>
-      {/* Search */}
       <PresentationSearch
         value={searchQuery}
         onChange={setSearchQuery}
@@ -63,14 +60,14 @@ const TrashPage = () => {
                 key={index}
                 className="flex items-center gap-4 rounded-md bg-white p-4"
               >
-                <div className="h-16 w-24 shrink-0 animate-pulse rounded-md bg-gray-200" />
+                <div className="h-22 w-22 shrink-0 animate-pulse rounded-md bg-gray-200" />
                 <div className="flex-1 space-y-2">
                   <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
                   <div className="h-3 w-1/2 animate-pulse rounded bg-gray-200" />
                 </div>
                 <div className="flex gap-2">
-                  <div className="h-9 w-24 animate-pulse rounded-md bg-gray-200" />
-                  <div className="h-9 w-32 animate-pulse rounded-md bg-gray-200" />
+                  <div className="h-9 w-9 md:w-24 animate-pulse rounded-md bg-gray-200" />
+                  <div className="h-9 w-9 md:w-32 animate-pulse rounded-md bg-gray-200" />
                 </div>
               </div>
             ))}

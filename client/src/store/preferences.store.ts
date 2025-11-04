@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { appConfig } from '@/config/app';
+
 type ViewMode = 'grid' | 'list';
 
 interface PreferencesState {
@@ -14,20 +16,20 @@ interface PreferencesState {
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
-      presentationView: 'grid',
+      presentationView: appConfig.ui.defaultViewMode,
       setPresentationView: (view) => set({ presentationView: view }),
-      sidebarOpen: true,
+      sidebarOpen: appConfig.ui.sidebarDefaultOpen,
       setSidebarOpen: (open) => set({ sidebarOpen: open }),
       toggleSidebar: () =>
         set((state) => ({ sidebarOpen: !state.sidebarOpen })),
     }),
     {
-      name: 'outlinr-preferences',
+      name: appConfig.storage.preferencesKey,
     },
   ),
 );
 
-// Optimized selectors
+// Optimized selectors to prevent unnecessary re-renders
 export const usePresentationView = () =>
   usePreferencesStore((state) => state.presentationView);
 

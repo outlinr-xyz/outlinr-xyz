@@ -82,8 +82,10 @@ const TrashActions = ({ presentationId, onAction }: TrashActionsProps) => {
           onClick={handleRestore}
           disabled={isRestoring}
         >
-          <RotateCcw className="mr-2 h-4 w-4" />
-          {isRestoring ? 'Restoring...' : 'Restore'}
+          <RotateCcw className="md:mr-2 h-4 w-4" />
+          <span className='hidden md:block'>
+            {isRestoring ? 'Restoring...' : 'Restore'}
+          </span>
         </Button>
 
         <Button
@@ -91,10 +93,12 @@ const TrashActions = ({ presentationId, onAction }: TrashActionsProps) => {
           size="sm"
           onClick={handleDeleteClick}
           disabled={isDeleting}
-          className="text-red-600 hover:text-red-700"
+          className="text-red-500 hover:text-red-600"
         >
-          <Trash2 className="mr-2 h-4 w-4" />
-          Delete Forever
+          <Trash2 className="md:mr-2 h-4 w-4" />
+          <span className='hidden md:block'>
+            Delete Forever
+          </span>
         </Button>
       </div>
 
@@ -112,7 +116,7 @@ const TrashActions = ({ presentationId, onAction }: TrashActionsProps) => {
             <AlertDialogAction
               onClick={handlePermanentDelete}
               disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-500 hover:bg-red-600"
             >
               {isDeleting ? 'Deleting...' : 'Delete Permanently'}
             </AlertDialogAction>

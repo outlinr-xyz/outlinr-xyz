@@ -1,7 +1,9 @@
-import { EmptyState, PresentationList } from '@/features/presentations';
 import { useRecentPresentations } from '@/hooks/use-presentations';
 import { formatTimeAgo } from '@/lib/utils';
 import type { Presentation } from '@/types/presentation';
+
+import EmptyState from './empty-state';
+import PresentationList from './presentation-list';
 
 const RecentPresentations = () => {
   const { presentations, isLoading, error, refetch } = useRecentPresentations();

@@ -4,7 +4,7 @@ interface EmptyStateProps {
 
 const EmptyState = ({ message }: EmptyStateProps) => {
   return (
-    <div className="text-muted-foreground mt-4 text-center text-sm">
+    <div className="text-muted-foreground mt-24 text-center text-sm md:mt-32 lg:mt-48">
       {message}
     </div>
   );

@@ -7,8 +7,8 @@ const PresentationCardSkeleton = ({
 }: PresentationCardSkeletonProps) => {
   if (variant === 'list') {
     return (
-      <div className="flex items-center gap-4 rounded-md bg-white p-4">
-        <div className="h-16 w-24 shrink-0 animate-pulse rounded-md bg-gray-200" />
+      <div className="flex items-center gap-4 rounded-md bg-white py-4">
+        <div className="h-22 w-22 shrink-0 animate-pulse rounded-md bg-gray-200" />
         <div className="flex-1 space-y-2">
           <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200" />
           <div className="h-3 w-1/2 animate-pulse rounded bg-gray-200" />

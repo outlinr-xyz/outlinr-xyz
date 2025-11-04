@@ -97,7 +97,7 @@ const PresentationNavbar = () => {
     <header className="flex h-16 items-center justify-between border-b bg-white px-4">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" className="rounded-full" asChild>
-          <Link to="/app/dashboard">
+          <Link to="/app/home">
             <ArrowLeftIcon className="h-5 w-5" />
           </Link>
         </Button>
@@ -119,7 +119,7 @@ const PresentationNavbar = () => {
             className={cn(
               'rounded-full',
               location.pathname.includes('question') &&
-                'bg-gray-100 text-gray-900',
+              'bg-gray-100 text-gray-900',
             )}
             asChild
           >
@@ -130,7 +130,7 @@ const PresentationNavbar = () => {
             className={cn(
               'rounded-full',
               location.pathname.includes('results') &&
-                'bg-gray-100 text-gray-900',
+              'bg-gray-100 text-gray-900',
             )}
             asChild
           >

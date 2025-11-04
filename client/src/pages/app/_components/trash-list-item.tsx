@@ -10,9 +10,8 @@ interface TrashListItemProps {
 
 const TrashListItem = ({ presentation, onAction }: TrashListItemProps) => {
   return (
-    <div className="flex items-center gap-4 rounded-md bg-white p-4">
-      {/* Thumbnail */}
-      <div className="relative h-16 w-24 shrink-0 overflow-hidden rounded-md">
+    <div className="flex items-center gap-4 rounded-md bg-white py-4">
+      <div className="relative h-22 w-22 shrink-0 overflow-hidden rounded-md">
         {presentation.thumbnail_url ? (
           <img
             src={presentation.thumbnail_url}
@@ -31,7 +30,6 @@ const TrashListItem = ({ presentation, onAction }: TrashListItemProps) => {
         )}
       </div>
 
-      {/* Title and Date */}
       <div className="flex min-w-0 flex-1 flex-col">
         <h3 className="truncate text-sm font-medium text-gray-900">
           {presentation.title}
@@ -43,7 +41,6 @@ const TrashListItem = ({ presentation, onAction }: TrashListItemProps) => {
         </p>
       </div>
 
-      {/* Action Buttons */}
       <TrashActions presentationId={presentation.id} onAction={onAction} />
     </div>
   );

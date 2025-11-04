@@ -1,9 +1,19 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL! as string;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY! as string;
+import { env } from '@/config/env';
 
+/**
+ * Supabase client instance
+ * Configured with environment variables from centralized config
+ */
 export const supabase: SupabaseClient = createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
+  env.supabase.url,
+  env.supabase.anonKey,
 );
+
+/**
+ * Helper to check if Supabase is properly configured
+ */
+export function isSupabaseConfigured(): boolean {
+  return Boolean(env.supabase.url && env.supabase.anonKey);
+}

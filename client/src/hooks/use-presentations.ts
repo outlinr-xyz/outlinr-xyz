@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react';
 
+import { appConfig } from '@/config/app';
 import {
+  getDeletedPresentations,
   getPresentations,
   getRecentPresentations,
 } from '@/lib/api/presentations';
+import { formatErrorMessage } from '@/lib/errors';
 import type { Presentation } from '@/types/presentation';
 
 interface UsePresentationsOptions {
@@ -23,10 +26,17 @@ interface UsePresentationsReturn {
   setPage: (page: number) => void;
 }
 
+/**
+ * Hook for fetching and managing paginated presentations
+ */
 export function usePresentations(
   options: UsePresentationsOptions = {},
 ): UsePresentationsReturn {
-  const { page: initialPage = 1, pageSize = 9, autoFetch = true } = options;
+  const {
+    page: initialPage = 1,
+    pageSize = appConfig.pagination.defaultPageSize,
+    autoFetch = true,
+  } = options;
 
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(autoFetch);
@@ -45,7 +55,7 @@ export function usePresentations(
       setTotal(result.total);
     } catch (err) {
       console.error('Failed to fetch presentations:', err);
-      setError('Failed to load presentations');
+      setError(formatErrorMessage(err));
       setPresentations([]);
     } finally {
       setIsLoading(false);
@@ -77,7 +87,12 @@ interface UseRecentPresentationsReturn {
   refetch: () => Promise<void>;
 }
 
-export function useRecentPresentations(): UseRecentPresentationsReturn {
+/**
+ * Hook for fetching recently opened presentations
+ */
+export function useRecentPresentations(
+  limit?: number,
+): UseRecentPresentationsReturn {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -86,16 +101,16 @@ export function useRecentPresentations(): UseRecentPresentationsReturn {
     try {
       setIsLoading(true);
       setError(null);
-      const data = await getRecentPresentations();
+      const data = await getRecentPresentations(limit);
       setPresentations(data);
     } catch (err) {
       console.error('Failed to fetch recent presentations:', err);
-      setError('Failed to load presentations');
+      setError(formatErrorMessage(err));
       setPresentations([]);
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [limit]);
 
   useEffect(() => {
     fetchPresentations();
@@ -116,6 +131,9 @@ interface UseDeletedPresentationsReturn {
   refetch: () => Promise<void>;
 }
 
+/**
+ * Hook for fetching deleted presentations (trash)
+ */
 export function useDeletedPresentations(): UseDeletedPresentationsReturn {
   const [presentations, setPresentations] = useState<Presentation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -125,14 +143,11 @@ export function useDeletedPresentations(): UseDeletedPresentationsReturn {
     try {
       setIsLoading(true);
       setError(null);
-      const { getDeletedPresentations } = await import(
-        '@/lib/api/presentations'
-      );
       const data = await getDeletedPresentations();
       setPresentations(data);
     } catch (err) {
       console.error('Failed to fetch deleted presentations:', err);
-      setError('Failed to load deleted presentations');
+      setError(formatErrorMessage(err));
       setPresentations([]);
     } finally {
       setIsLoading(false);

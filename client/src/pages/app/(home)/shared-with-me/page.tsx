@@ -1,9 +1,22 @@
 import { useState } from 'react';
 
-import PresentationSearch from '@/features/presentations/components/presentation-search';
+import { useRecentPresentations } from '@/hooks/use-presentations';
+import { formatTimeAgo } from '@/lib/utils';
+import type { Presentation } from '@/types';
+
+import EmptyState from '../../_components/empty-state';
+import PresentationList from '../../_components/presentation-list';
+import PresentationSearch from '../../_components/presentation-search';
 
 const SharedWithMePage = () => {
+  const { presentations, isLoading, error, refetch } = useRecentPresentations();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const getHref = (presentation: Presentation) =>
+    `/app/presentation/${presentation.id}/shared-with-me`;
+
+  const getMetadata = (presentation: Presentation) =>
+    formatTimeAgo(presentation.last_opened_at);
 
   return (
     <>
@@ -16,7 +29,6 @@ const SharedWithMePage = () => {
         </p>
       </div>
 
-      {/* Search */}
       <PresentationSearch
         value={searchQuery}
         onChange={setSearchQuery}
@@ -24,10 +36,23 @@ const SharedWithMePage = () => {
       />
 
       <div className="w-full max-w-6xl">
-        <div className="text-muted-foreground mt-4 text-center text-sm">
-          No shared presentations yet. When someone shares a presentation with
-          you, it will appear here.
-        </div>
+        {error ? (
+          <EmptyState message={error} />
+        ) : presentations.length === 0 && !isLoading ? (
+          <EmptyState message="No shared presentations yet." />
+        ) : (
+          <div className="mt-4">
+            <PresentationList
+              presentations={presentations}
+              isLoading={isLoading}
+              view="grid"
+              getHref={getHref}
+              getMetadata={getMetadata}
+              skeletonCount={3}
+              onDelete={refetch}
+            />
+          </div>
+        )}
       </div>
     </>
   );

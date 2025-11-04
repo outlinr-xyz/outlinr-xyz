@@ -66,8 +66,8 @@ const PresentationCardActions = ({
 
   const buttonClasses =
     variant === 'grid'
-      ? 'rounded-md p-1.5 text-gray-600 hover:bg-white/80 hover:text-gray-900 transition-colors cursor-pointer'
-      : 'rounded-md p-1.5 text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer';
+      ? 'rounded-full p-2 text-gray-600 hover:bg-white/80 hover:text-gray-900 transition-colors cursor-pointer'
+      : 'rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 cursor-pointer';
 
   return (
     <>
@@ -79,11 +79,10 @@ const PresentationCardActions = ({
           <MoreVertical className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenuItem onClick={handleShare}>Share</DropdownMenuItem>
+          <DropdownMenuItem className='cursor-pointer' onClick={handleShare}>Share</DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteClick}
-            className="text-red-600"
-          >
+            className="text-red-500 cursor-pointer">
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -103,7 +102,7 @@ const PresentationCardActions = ({
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={isDeleting}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-red-500 hover:bg-red-600 cursor-pointer"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

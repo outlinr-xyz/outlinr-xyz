@@ -1,9 +1,22 @@
 import { useState } from 'react';
 
-import PresentationSearch from '@/features/presentations/components/presentation-search';
+import { useRecentPresentations } from '@/hooks/use-presentations';
+import { formatTimeAgo } from '@/lib/utils';
+import type { Presentation } from '@/types';
+
+import EmptyState from '../../_components/empty-state';
+import PresentationList from '../../_components/presentation-list';
+import PresentationSearch from '../../_components/presentation-search';
 
 const WorkSpacePage = () => {
+  const { presentations, isLoading, error, refetch } = useRecentPresentations();
   const [searchQuery, setSearchQuery] = useState('');
+
+  const getHref = (presentation: Presentation) =>
+    `/app/presentation/${presentation.id}/shared-with-me`;
+
+  const getMetadata = (presentation: Presentation) =>
+    formatTimeAgo(presentation.last_opened_at);
 
   return (
     <>
@@ -16,19 +29,29 @@ const WorkSpacePage = () => {
         </p>
       </div>
 
-      {/* Search */}
       <PresentationSearch
         value={searchQuery}
         onChange={setSearchQuery}
         placeholder="Search workspace..."
       />
 
-      <div className="w-full max-w-6xl">
-        <div className="text-muted-foreground mt-4 text-center text-sm">
-          No workspace presentations yet. Create or join a workspace to
-          collaborate with your team.
+      {error ? (
+        <EmptyState message={error} />
+      ) : presentations.length === 0 && !isLoading ? (
+        <EmptyState message="No workspace presentations yet." />
+      ) : (
+        <div className="mt-4">
+          <PresentationList
+            presentations={presentations}
+            isLoading={isLoading}
+            view="grid"
+            getHref={getHref}
+            getMetadata={getMetadata}
+            skeletonCount={3}
+            onDelete={refetch}
+          />
         </div>
-      </div>
+      )}
     </>
   );
 };
