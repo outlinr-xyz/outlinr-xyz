@@ -2,6 +2,7 @@ import { MoreVertical } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
+import ShareDialog from '@/components/share-dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,23 +23,25 @@ import { deletePresentation } from '@/lib/api/presentations';
 
 interface PresentationCardActionsProps {
   presentationId: string;
+  presentationTitle?: string;
   variant?: 'grid' | 'list';
   onDelete?: () => void;
 }
 
 const PresentationCardActions = ({
   presentationId,
+  presentationTitle = 'Untitled Presentation',
   variant = 'grid',
   onDelete,
 }: PresentationCardActionsProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleShare = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // TODO: Implement share functionality
-    toast.info('Share functionality coming soon');
+    setShowShareDialog(true);
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
@@ -112,6 +115,13 @@ const PresentationCardActions = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ShareDialog
+        open={showShareDialog}
+        onOpenChange={setShowShareDialog}
+        presentationId={presentationId}
+        presentationTitle={presentationTitle}
+      />
     </>
   );
 };

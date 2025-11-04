@@ -6,8 +6,9 @@ import {
   Loader2Icon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 
+import ShareDialog from '@/components/share-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,8 @@ type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 const PresentationNavbar = () => {
   const { id } = useParams<{ id: string }>();
+  // FIX: Get the location object
+  const location = useLocation();
   const user = useUser();
   const displayName = useUserDisplayName();
 
@@ -32,6 +35,7 @@ const PresentationNavbar = () => {
   const [lastSavedTitle, setLastSavedTitle] = useState('');
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [isLoading, setIsLoading] = useState(true);
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -118,6 +122,7 @@ const PresentationNavbar = () => {
             variant="ghost"
             className={cn(
               'rounded-full',
+              // Use location.pathname here
               location.pathname.includes('question') &&
                 'bg-gray-100 text-gray-900',
             )}
@@ -129,6 +134,7 @@ const PresentationNavbar = () => {
             variant="ghost"
             className={cn(
               'rounded-full',
+              // Use location.pathname here
               location.pathname.includes('results') &&
                 'bg-gray-100 text-gray-900',
             )}
@@ -165,7 +171,10 @@ const PresentationNavbar = () => {
         <Button variant="outline" className="rounded-full" asChild>
           <Link to={`/app/presentation/${id}/preview`}>Present</Link>
         </Button>
-        <Button className="rounded-full bg-[#254BF5] text-white hover:bg-[#254BF5]/90">
+        <Button
+          className="rounded-full bg-[#254BF5] text-white hover:bg-[#254BF5]/90"
+          onClick={() => setShowShareDialog(true)}
+        >
           <LinkIcon className="mr-2 h-4 w-4" />
           Share
         </Button>
@@ -186,6 +195,15 @@ const PresentationNavbar = () => {
           </Tooltip>
         </TooltipProvider>
       </div>
+
+      {id && (
+        <ShareDialog
+          open={showShareDialog}
+          onOpenChange={setShowShareDialog}
+          presentationId={id}
+          presentationTitle={title}
+        />
+      )}
     </header>
   );
 };

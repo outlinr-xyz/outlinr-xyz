@@ -1,6 +1,7 @@
 import { lazy } from 'react';
+// FIX: Import Outlet
 import type { RouteObject } from 'react-router';
-import { Navigate } from 'react-router';
+import { Navigate, Outlet } from 'react-router';
 
 import { ProtectedRoute } from '@/components/protected-routes';
 import { ROUTES } from '@/lib/constants/routes';
@@ -143,9 +144,7 @@ const presentationRoutes: RouteObject = {
   path: ROUTES.PRESENTATION.BASE,
   element: (
     <ProtectedRoute>
-      <div style={{ width: '100%', height: '100%' }}>
-        <Navigate to={ROUTES.APP.HOME} replace />
-      </div>
+      <Outlet />
     </ProtectedRoute>
   ),
   children: [

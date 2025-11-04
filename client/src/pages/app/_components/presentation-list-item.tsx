@@ -1,5 +1,5 @@
 import { LineChart } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import type { Presentation } from '@/types/presentation';
 
@@ -18,6 +18,14 @@ const PresentationListItem = ({
   metadata,
   onDelete,
 }: PresentationListItemProps) => {
+  const navigate = useNavigate();
+
+  const handleResultsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/app/presentation/${presentation.id}/results`);
+  };
+
   return (
     <Link
       to={href}
@@ -51,20 +59,20 @@ const PresentationListItem = ({
         </p>
       </div>
 
-      <div
-        className="flex items-center gap-2"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <Link
-          to={`/app/presentation/${presentation.id}/results`}
+      {/* FIX: Removed onClick={(e) => e.stopPropagation()} from this div.
+        The buttons inside already handle their own click events.
+      */}
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleResultsClick}
           className="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-          onClick={(e) => e.stopPropagation()}
         >
           <LineChart className="h-4 w-4" />
-        </Link>
+        </button>
 
         <PresentationCardActions
           presentationId={presentation.id}
+          presentationTitle={presentation.title}
           variant="list"
           onDelete={onDelete}
         />

@@ -1,3 +1,8 @@
+import discordIcon from '../../src/assets/icons/discord.svg';
+import googleIcon from '../../src/assets/icons/google.svg';
+import linkedinIcon from '../../src/assets/icons/linkedin.svg';
+import microsoftIcon from '../../src/assets/icons/microsoft.svg';
+
 /**
  * Authentication-related constants
  */
@@ -6,22 +11,23 @@ export const oauthProviders = [
   {
     provider: 'google',
     name: 'Google',
-    icon: 'https://www.svgrepo.com/show/475656/google-color.svg',
+    // 2. Use the imported variable instead of the static string path.
+    icon: googleIcon,
   },
   {
     provider: 'azure',
     name: 'Microsoft',
-    icon: 'https://www.svgrepo.com/show/448239/microsoft.svg',
+    icon: microsoftIcon,
   },
   {
     provider: 'discord',
     name: 'Discord',
-    icon: 'https://www.svgrepo.com/show/353655/discord-icon.svg',
+    icon: discordIcon,
   },
   {
     provider: 'linkedin_oidc',
     name: 'LinkedIn',
-    icon: 'https://www.svgrepo.com/show/448234/linkedin.svg',
+    icon: linkedinIcon,
   },
 ] as const;
 

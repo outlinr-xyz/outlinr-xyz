@@ -1,5 +1,5 @@
 import { LineChart } from 'lucide-react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 
 import {
   Item,
@@ -25,6 +25,14 @@ const PresentationCard = ({
   metadata,
   onDelete,
 }: PresentationCardProps) => {
+  const navigate = useNavigate();
+
+  const handleResultsClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/app/presentation/${presentation.id}/results`);
+  };
+
   return (
     <div className="space-y-2">
       <Link to={href} className="block">
@@ -33,13 +41,12 @@ const PresentationCard = ({
             thumbnailUrl={presentation.thumbnail_url}
             title={presentation.title}
           />
-          <Link
-            to={`/app/presentation/${presentation.id}/results`}
-            className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            onClick={handleResultsClick}
+            className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700 transition-colors hover:bg-gray-100"
           >
             <LineChart className="h-4 w-4" />
-          </Link>
+          </button>
         </Item>
 
         <div className="mt-2 flex items-center justify-between gap-2 px-1">
@@ -53,13 +60,15 @@ const PresentationCard = ({
             </ItemDescription>
           </ItemContent>
 
-          <div onClick={(e) => e.stopPropagation()}>
-            <PresentationCardActions
-              presentationId={presentation.id}
-              variant="grid"
-              onDelete={onDelete}
-            />
-          </div>
+          {/* FIX: Removed the wrapper div with stopPropagation here.
+            The PresentationCardActions component handles its own events.
+          */}
+          <PresentationCardActions
+            presentationId={presentation.id}
+            presentationTitle={presentation.title}
+            variant="grid"
+            onDelete={onDelete}
+          />
         </div>
       </Link>
     </div>

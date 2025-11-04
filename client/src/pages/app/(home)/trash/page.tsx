@@ -58,7 +58,7 @@ const TrashPage = () => {
             {Array.from({ length: 3 }).map((_, index) => (
               <div
                 key={index}
-                className="flex items-center gap-4 rounded-md bg-white p-4"
+                className="flex items-center gap-4 rounded-md bg-white py-4"
               >
                 <div className="h-22 w-22 shrink-0 animate-pulse rounded-md bg-gray-200" />
                 <div className="flex-1 space-y-2">
