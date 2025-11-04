@@ -79,10 +79,13 @@ const PresentationCardActions = ({
           <MoreVertical className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenuItem className='cursor-pointer' onClick={handleShare}>Share</DropdownMenuItem>
+          <DropdownMenuItem className="cursor-pointer" onClick={handleShare}>
+            Share
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteClick}
-            className="text-red-500 cursor-pointer">
+            className="cursor-pointer text-red-500"
+          >
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -102,7 +105,7 @@ const PresentationCardActions = ({
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={isDeleting}
-              className="bg-red-500 hover:bg-red-600 cursor-pointer"
+              className="cursor-pointer bg-red-500 hover:bg-red-600"
             >
               {isDeleting ? 'Deleting...' : 'Delete'}
             </AlertDialogAction>

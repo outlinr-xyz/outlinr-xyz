@@ -25,5 +25,5 @@ export const oauthProviders = [
   },
 ] as const;
 
-export type OAuthProvider = typeof oauthProviders[number];
-export type OAuthProviderName = typeof oauthProviders[number]['provider'];
+export type OAuthProvider = (typeof oauthProviders)[number];
+export type OAuthProviderName = (typeof oauthProviders)[number]['provider'];

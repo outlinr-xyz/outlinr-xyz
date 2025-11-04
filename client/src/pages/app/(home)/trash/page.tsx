@@ -66,8 +66,8 @@ const TrashPage = () => {
                   <div className="h-3 w-1/2 animate-pulse rounded bg-gray-200" />
                 </div>
                 <div className="flex gap-2">
-                  <div className="h-9 w-9 md:w-24 animate-pulse rounded-md bg-gray-200" />
-                  <div className="h-9 w-9 md:w-32 animate-pulse rounded-md bg-gray-200" />
+                  <div className="h-9 w-9 animate-pulse rounded-md bg-gray-200 md:w-24" />
+                  <div className="h-9 w-9 animate-pulse rounded-md bg-gray-200 md:w-32" />
                 </div>
               </div>
             ))}

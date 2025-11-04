@@ -31,5 +31,5 @@ export const popularFeatures = [
   },
 ] as const;
 
-export type PopularFeature = typeof popularFeatures[number];
-export type FeatureName = typeof popularFeatures[number]['name'];
+export type PopularFeature = (typeof popularFeatures)[number];
+export type FeatureName = (typeof popularFeatures)[number]['name'];

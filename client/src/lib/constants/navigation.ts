@@ -52,4 +52,6 @@ export const sidebarItems = {
   ],
 } as const;
 
-export type SidebarItem = typeof sidebarItems.top[number] | typeof sidebarItems.bottom[number];
+export type SidebarItem =
+  | (typeof sidebarItems.top)[number]
+  | (typeof sidebarItems.bottom)[number];

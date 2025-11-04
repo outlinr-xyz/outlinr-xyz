@@ -119,7 +119,7 @@ const PresentationNavbar = () => {
             className={cn(
               'rounded-full',
               location.pathname.includes('question') &&
-              'bg-gray-100 text-gray-900',
+                'bg-gray-100 text-gray-900',
             )}
             asChild
           >
@@ -130,7 +130,7 @@ const PresentationNavbar = () => {
             className={cn(
               'rounded-full',
               location.pathname.includes('results') &&
-              'bg-gray-100 text-gray-900',
+                'bg-gray-100 text-gray-900',
             )}
             asChild
           >

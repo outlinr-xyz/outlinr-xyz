@@ -27,28 +27,34 @@ export function filterPresentations<
 /**
  * Sort presentations by different criteria
  */
-export function sortPresentations<T extends {
-  created_at: string;
-  updated_at: string;
-  last_opened_at: string;
-  title: string;
-}>(
+export function sortPresentations<
+  T extends {
+    created_at: string;
+    updated_at: string;
+    last_opened_at: string;
+    title: string;
+  },
+>(
   presentations: T[],
   sortBy: 'created' | 'updated' | 'opened' | 'title' = 'created',
-  order: 'asc' | 'desc' = 'desc'
+  order: 'asc' | 'desc' = 'desc',
 ): T[] {
   const sorted = [...presentations].sort((a, b) => {
     let comparison = 0;
 
     switch (sortBy) {
       case 'created':
-        comparison = new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        comparison =
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         break;
       case 'updated':
-        comparison = new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
+        comparison =
+          new Date(a.updated_at).getTime() - new Date(b.updated_at).getTime();
         break;
       case 'opened':
-        comparison = new Date(a.last_opened_at).getTime() - new Date(b.last_opened_at).getTime();
+        comparison =
+          new Date(a.last_opened_at).getTime() -
+          new Date(b.last_opened_at).getTime();
         break;
       case 'title':
         comparison = a.title.localeCompare(b.title);
