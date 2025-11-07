@@ -43,7 +43,7 @@ const PresentationCard = ({
           />
           <button
             onClick={handleResultsClick}
-            className="absolute top-2 right-2 rounded-full bg-white p-2 text-gray-700 transition-colors hover:bg-gray-100"
+            className="absolute top-2 right-2 cursor-pointer rounded-full bg-white p-2 text-gray-700 transition-colors hover:bg-gray-100"
           >
             <LineChart className="h-4 w-4" />
           </button>
@@ -54,7 +54,6 @@ const PresentationCard = ({
             <ItemTitle className="truncate text-sm font-medium text-gray-900">
               {presentation.title}
             </ItemTitle>
-
             <ItemDescription className="text-muted-foreground truncate text-xs sm:text-sm">
               {metadata}
             </ItemDescription>
