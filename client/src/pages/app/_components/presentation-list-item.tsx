@@ -58,10 +58,6 @@ const PresentationListItem = ({
           {metadata}
         </p>
       </div>
-
-      {/* FIX: Removed onClick={(e) => e.stopPropagation()} from this div.
-        The buttons inside already handle their own click events.
-      */}
       <div className="flex items-center gap-2">
         <button
           onClick={handleResultsClick}
@@ -72,7 +68,6 @@ const PresentationListItem = ({
 
         <PresentationCardActions
           presentationId={presentation.id}
-          presentationTitle={presentation.title}
           variant="list"
           onDelete={onDelete}
         />

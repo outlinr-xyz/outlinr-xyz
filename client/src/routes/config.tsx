@@ -26,9 +26,7 @@ const HomePage = lazy(() => import('@/pages/app/(home)/home/page'));
 const DashboardPage = lazy(() => import('@/pages/app/(home)/dashboard/page'));
 const WorkSpacePage = lazy(() => import('@/pages/app/(home)/workspace/page'));
 const TemplatesPage = lazy(() => import('@/pages/app/(home)/templates/page'));
-const SharedWithMePage = lazy(
-  () => import('@/pages/app/(home)/shared-with-me/page'),
-);
+
 const TrashPage = lazy(() => import('@/pages/app/(home)/trash/page'));
 
 // Presentation pages
@@ -126,10 +124,7 @@ const appRoutes: RouteObject = {
       path: 'templates',
       element: <TemplatesPage />,
     },
-    {
-      path: 'shared-with-me',
-      element: <SharedWithMePage />,
-    },
+
     {
       path: 'trash',
       element: <TrashPage />,

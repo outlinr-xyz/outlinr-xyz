@@ -2,7 +2,6 @@ import { MoreVertical } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
-import ShareDialog from '@/components/share-dialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,26 +22,17 @@ import { deletePresentation } from '@/lib/api/presentations';
 
 interface PresentationCardActionsProps {
   presentationId: string;
-  presentationTitle?: string;
   variant?: 'grid' | 'list';
   onDelete?: () => void;
 }
 
 const PresentationCardActions = ({
   presentationId,
-  presentationTitle = 'Untitled Presentation',
   variant = 'grid',
   onDelete,
 }: PresentationCardActionsProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showShareDialog, setShowShareDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-
-  const handleShare = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowShareDialog(true);
-  };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -82,9 +72,6 @@ const PresentationCardActions = ({
           <MoreVertical className="h-4 w-4" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-          <DropdownMenuItem className="cursor-pointer" onClick={handleShare}>
-            Share
-          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={handleDeleteClick}
             className="cursor-pointer text-red-500"
@@ -115,13 +102,6 @@ const PresentationCardActions = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <ShareDialog
-        open={showShareDialog}
-        onOpenChange={setShowShareDialog}
-        presentationId={presentationId}
-        presentationTitle={presentationTitle}
-      />
     </>
   );
 };
