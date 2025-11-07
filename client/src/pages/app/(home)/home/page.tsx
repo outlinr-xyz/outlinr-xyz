@@ -9,7 +9,6 @@ import RecentPresentations from '../../_components/recent-presentations';
 
 const HomePage = () => {
   const displayName = useUserDisplayName();
-
   return (
     <>
       <h1 className="text-2xl font-semibold sm:text-3xl lg:text-4xl">

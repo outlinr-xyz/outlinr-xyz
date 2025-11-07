@@ -1,4 +1,4 @@
-import { Home, Inbox, Trash, User, Users } from 'lucide-react';
+import { Home, Trash, User, Users } from 'lucide-react';
 
 /**
  * Navigation constants for sidebar and app navigation
@@ -15,11 +15,6 @@ export const sidebarItems = {
       title: 'my presentations',
       url: '/app/dashboard',
       icon: User,
-    },
-    {
-      title: 'shared with me',
-      url: '/app/shared-with-me',
-      icon: Inbox,
     },
     {
       title: 'workspace',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { useRecentPresentations } from '@/hooks/use-presentations';
-import { formatTimeAgo } from '@/lib/utils';
+import { filterPresentations, formatTimeAgo } from '@/lib/utils';
 import type { Presentation } from '@/types';
 
 import EmptyState from '../../_components/empty-state';
@@ -11,9 +11,9 @@ import PresentationSearch from '../../_components/presentation-search';
 const WorkSpacePage = () => {
   const { presentations, isLoading, error, refetch } = useRecentPresentations();
   const [searchQuery, setSearchQuery] = useState('');
-
+  const filteredPresentations = filterPresentations(presentations, searchQuery);
   const getHref = (presentation: Presentation) =>
-    `/app/presentation/${presentation.id}/shared-with-me`;
+    `/app/presentation/${presentation.id}/question`;
 
   const getMetadata = (presentation: Presentation) =>
     formatTimeAgo(presentation.last_opened_at);
@@ -37,12 +37,16 @@ const WorkSpacePage = () => {
 
       {error ? (
         <EmptyState message={error} />
+      ) : filteredPresentations.length === 0 && !isLoading && searchQuery ? (
+        <EmptyState
+          message={`No presentations found matching "${searchQuery}"`}
+        />
       ) : presentations.length === 0 && !isLoading ? (
         <EmptyState message="No workspace presentations yet." />
       ) : (
         <div className="mt-4">
           <PresentationList
-            presentations={presentations}
+            presentations={filteredPresentations}
             isLoading={isLoading}
             view="grid"
             getHref={getHref}
