@@ -1,5 +1,5 @@
 -- ============================================================================
--- COMPLETE DATABASE SCHEMA FOR OUTLINR PRESENTATION APPLICATION
+-- COMPLETE DATABASE SCHEMA FOR OUTLINR APPLICATION
 -- ============================================================================
 -- This file contains the complete schema for all tables in the application.
 -- Run this in your Supabase SQL Editor to create all tables from scratch.
@@ -260,75 +260,43 @@ COMMENT ON COLUMN responses.is_correct IS 'Whether the answer was correct';
 COMMENT ON COLUMN responses.response_time IS 'Time taken to answer in milliseconds';
 
 -- ============================================================================
--- TABLE: presentation_shares
+-- TABLE: plans
 -- ============================================================================
--- Stores presentation sharing information with single-use link support
+-- Stores pricing plans and Lemon Squeezy variant IDs
 -- ============================================================================
 
-CREATE TABLE IF NOT EXISTS presentation_shares (
+CREATE TABLE IF NOT EXISTS plans (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  presentation_id UUID NOT NULL,
-  shared_by UUID NOT NULL,
-  shared_with UUID, -- NULL for link shares
-  permission VARCHAR(10) NOT NULL,
-  share_token VARCHAR(255) NOT NULL UNIQUE,
-  share_type VARCHAR(10) NOT NULL,
-  expires_at TIMESTAMP WITH TIME ZONE,
-  is_single_use BOOLEAN NOT NULL DEFAULT true,
-  used_at TIMESTAMP WITH TIME ZONE,
+  name TEXT NOT NULL,
+  lemon_variant_id TEXT NOT NULL UNIQUE,
+  price INTEGER NOT NULL,
+  type VARCHAR(50) NOT NULL,
+  duration VARCHAR(50) NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
 
-  -- Foreign keys
-  CONSTRAINT fk_presentation_shares_presentation
-    FOREIGN KEY (presentation_id)
-    REFERENCES presentations(id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_presentation_shares_shared_by
-    FOREIGN KEY (shared_by)
-    REFERENCES auth.users(id)
-    ON DELETE CASCADE,
-
-  CONSTRAINT fk_presentation_shares_shared_with
-    FOREIGN KEY (shared_with)
-    REFERENCES auth.users(id)
-    ON DELETE CASCADE,
-
   -- Check constraints
-  CONSTRAINT chk_share_permission
-    CHECK (permission IN ('view', 'edit')),
+  CONSTRAINT chk_plan_type
+    CHECK (type IN ('one_off', 'subscription', 'enterprise')),
 
-  CONSTRAINT chk_share_type
-    CHECK (share_type IN ('direct', 'link'))
+  CONSTRAINT chk_plan_duration
+    CHECK (duration IN ('1_day', '3_day', '7_day', 'monthly', 'yearly'))
 );
 
--- Indexes for presentation_shares
-CREATE INDEX IF NOT EXISTS idx_presentation_shares_token
-  ON presentation_shares(share_token);
+-- Indexes for plans
+CREATE INDEX IF NOT EXISTS idx_plans_lemon_variant_id
+  ON plans(lemon_variant_id);
 
-CREATE INDEX IF NOT EXISTS idx_presentation_shares_presentation_id
-  ON presentation_shares(presentation_id);
+CREATE INDEX IF NOT EXISTS idx_plans_type
+  ON plans(type);
 
-CREATE INDEX IF NOT EXISTS idx_presentation_shares_shared_with
-  ON presentation_shares(shared_with)
-  WHERE shared_with IS NOT NULL;
-
-CREATE INDEX IF NOT EXISTS idx_presentation_shares_shared_by
-  ON presentation_shares(shared_by);
-
-CREATE INDEX IF NOT EXISTS idx_presentation_shares_expires_at
-  ON presentation_shares(expires_at)
-  WHERE expires_at IS NOT NULL;
-
--- Comments for presentation_shares
-COMMENT ON TABLE presentation_shares IS 'Stores presentation sharing with single-use link support';
-COMMENT ON COLUMN presentation_shares.share_token IS 'Unique 32-character token for share URLs';
-COMMENT ON COLUMN presentation_shares.permission IS 'Access level: view or edit';
-COMMENT ON COLUMN presentation_shares.share_type IS 'Type: direct (to user) or link (anyone with token)';
-COMMENT ON COLUMN presentation_shares.is_single_use IS 'Whether link expires after first use';
-COMMENT ON COLUMN presentation_shares.used_at IS 'Timestamp when link was first accessed';
-COMMENT ON COLUMN presentation_shares.expires_at IS 'Optional expiration timestamp';
+-- Comments for plans
+COMMENT ON TABLE plans IS 'Stores pricing plans and Lemon Squeezy variant IDs';
+COMMENT ON COLUMN plans.name IS 'Public name of the plan (e.g., Pro Monthly)';
+COMMENT ON COLUMN plans.lemon_variant_id IS 'Unique variant ID from Lemon Squeezy';
+COMMENT ON COLUMN plans.price IS 'Price in the smallest currency unit (e.g., cents)';
+COMMENT ON COLUMN plans.type IS 'Plan type: one_off, subscription, enterprise';
+COMMENT ON COLUMN plans.duration IS 'Plan duration: 1_day, 3_day, 7_day, monthly, yearly';
 
 -- ============================================================================
 -- TABLE: profiles (Optional - for user information)
@@ -390,10 +358,10 @@ CREATE TRIGGER update_sessions_updated_at
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
--- Trigger for presentation_shares
-DROP TRIGGER IF EXISTS update_presentation_shares_updated_at ON presentation_shares;
-CREATE TRIGGER update_presentation_shares_updated_at
-  BEFORE UPDATE ON presentation_shares
+-- Trigger for plans
+DROP TRIGGER IF EXISTS update_plans_updated_at ON plans;
+CREATE TRIGGER update_plans_updated_at
+  BEFORE UPDATE ON plans
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at_column();
 
@@ -441,7 +409,7 @@ ALTER TABLE questions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE sessions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE participants ENABLE ROW LEVEL SECURITY;
 ALTER TABLE responses ENABLE ROW LEVEL SECURITY;
-ALTER TABLE presentation_shares ENABLE ROW LEVEL SECURITY;
+ALTER TABLE plans ENABLE ROW LEVEL SECURITY;
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 -- ============================================================================
@@ -454,19 +422,7 @@ CREATE POLICY "Users can view their own presentations"
   FOR SELECT
   USING (auth.uid() = user_id);
 
-DROP POLICY IF EXISTS "Users can view shared presentations" ON presentations;
-CREATE POLICY "Users can view shared presentations"
-  ON presentations
-  FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM presentation_shares
-      WHERE presentation_shares.presentation_id = presentations.id
-      AND presentation_shares.shared_with = auth.uid()
-      AND (presentation_shares.expires_at IS NULL OR presentation_shares.expires_at > NOW())
-      AND (NOT presentation_shares.is_single_use OR presentation_shares.used_at IS NULL)
-    )
-  );
+-- Removed "Users can view shared presentations" policy
 
 DROP POLICY IF EXISTS "Users can create their own presentations" ON presentations;
 CREATE POLICY "Users can create their own presentations"
@@ -655,52 +611,32 @@ CREATE POLICY "Participants can create their own responses"
   );
 
 -- ============================================================================
--- RLS POLICIES: presentation_shares
+-- RLS POLICIES: plans
 -- ============================================================================
 
-DROP POLICY IF EXISTS "Users can view shares they created" ON presentation_shares;
-CREATE POLICY "Users can view shares they created"
-  ON presentation_shares
-  FOR SELECT
-  USING (auth.uid() = shared_by);
-
-DROP POLICY IF EXISTS "Users can view shares shared with them" ON presentation_shares;
-CREATE POLICY "Users can view shares shared with them"
-  ON presentation_shares
-  FOR SELECT
-  USING (auth.uid() = shared_with);
-
-DROP POLICY IF EXISTS "Anyone can view shares by token" ON presentation_shares;
-CREATE POLICY "Anyone can view shares by token"
-  ON presentation_shares
+DROP POLICY IF EXISTS "Anyone can view pricing plans" ON plans;
+CREATE POLICY "Anyone can view pricing plans"
+  ON plans
   FOR SELECT
   USING (true);
 
-DROP POLICY IF EXISTS "Users can create shares for their presentations" ON presentation_shares;
-CREATE POLICY "Users can create shares for their presentations"
-  ON presentation_shares
+DROP POLICY IF EXISTS "Disallow client-side plan creation" ON plans;
+CREATE POLICY "Disallow client-side plan creation"
+  ON plans
   FOR INSERT
-  WITH CHECK (
-    auth.uid() = shared_by AND
-    EXISTS (
-      SELECT 1 FROM presentations
-      WHERE presentations.id = presentation_shares.presentation_id
-      AND presentations.user_id = auth.uid()
-    )
-  );
+  WITH CHECK (false);
 
-DROP POLICY IF EXISTS "Users can update shares they created" ON presentation_shares;
-CREATE POLICY "Users can update shares they created"
-  ON presentation_shares
+DROP POLICY IF EXISTS "Disallow client-side plan updates" ON plans;
+CREATE POLICY "Disallow client-side plan updates"
+  ON plans
   FOR UPDATE
-  USING (auth.uid() = shared_by)
-  WITH CHECK (auth.uid() = shared_by);
+  USING (false);
 
-DROP POLICY IF EXISTS "Users can delete shares they created" ON presentation_shares;
-CREATE POLICY "Users can delete shares they created"
-  ON presentation_shares
+DROP POLICY IF EXISTS "Disallow client-side plan deletion" ON plans;
+CREATE POLICY "Disallow client-side plan deletion"
+  ON plans
   FOR DELETE
-  USING (auth.uid() = shared_by);
+  USING (false);
 
 -- ============================================================================
 -- RLS POLICIES: profiles
@@ -735,7 +671,7 @@ GRANT ALL ON questions TO authenticated;
 GRANT ALL ON sessions TO authenticated;
 GRANT ALL ON participants TO authenticated;
 GRANT ALL ON responses TO authenticated;
-GRANT ALL ON presentation_shares TO authenticated;
+GRANT SELECT ON plans TO authenticated;
 GRANT ALL ON profiles TO authenticated;
 
 -- Grant to anonymous users (for joining sessions via code)
@@ -743,7 +679,7 @@ GRANT SELECT ON sessions TO anon;
 GRANT INSERT ON participants TO anon;
 GRANT SELECT ON participants TO anon;
 GRANT INSERT ON responses TO anon;
-GRANT SELECT ON presentation_shares TO anon;
+GRANT SELECT ON plans TO anon;
 
 -- ============================================================================
 -- HELPER VIEWS
@@ -757,12 +693,10 @@ SELECT
   p.user_id,
   COUNT(DISTINCT q.id) as question_count,
   COUNT(DISTINCT s.id) as session_count,
-  COUNT(DISTINCT ps.id) as share_count,
   MAX(p.last_opened_at) as last_accessed
 FROM presentations p
 LEFT JOIN questions q ON p.id = q.presentation_id
 LEFT JOIN sessions s ON p.id = s.presentation_id
-LEFT JOIN presentation_shares ps ON p.id = ps.presentation_id
 WHERE p.deleted_at IS NULL
 GROUP BY p.id, p.title, p.user_id;
 
@@ -785,6 +719,22 @@ GRANT SELECT ON presentation_stats TO authenticated;
 GRANT SELECT ON session_results TO authenticated;
 
 -- ============================================================================
+-- DATA INSERTS
+-- ============================================================================
+
+-- Insert pricing plans
+INSERT INTO public.plans (name, lemon_variant_id, price, type, duration)
+VALUES
+  ('One-Day Pass', '1077493', 8500, 'one_off', '1_day'),
+  ('3-Day Pass', '1077499', 15000, 'one_off', '3_day'),
+  ('7-Day Pass', '1077500', 25500, 'one_off', '7_day'),
+  ('Pro Monthly', '1077500', 34000, 'subscription', 'monthly'),
+  ('Pro Yearly', '1077513', 340000, 'subscription', 'yearly'),
+  ('Enterprise Monthly', '1077515', 85000, 'enterprise', 'monthly'),
+  ('Enterprise Yearly', '1077510', 850000, 'enterprise', 'yearly')
+ON CONFLICT (lemon_variant_id) DO NOTHING;
+
+-- ============================================================================
 -- COMPLETION MESSAGE
 -- ============================================================================
 
@@ -799,14 +749,16 @@ BEGIN
   RAISE NOTICE '  - sessions';
   RAISE NOTICE '  - participants';
   RAISE NOTICE '  - responses';
-  RAISE NOTICE '  - presentation_shares';
+  RAISE NOTICE '  - plans';
   RAISE NOTICE '  - profiles';
+  RAISE NOTICE '';
+  RAISE NOTICE 'Data inserted:';
+  RAISE NOTICE '  ✓ 7 pricing plans';
   RAISE NOTICE '';
   RAISE NOTICE 'Features enabled:';
   RAISE NOTICE '  ✓ Row Level Security (RLS)';
   RAISE NOTICE '  ✓ Automatic timestamps';
   RAISE NOTICE '  ✓ Auto profile creation';
-  RAISE NOTICE '  ✓ Single-use share links';
   RAISE NOTICE '  ✓ Soft deletes';
   RAISE NOTICE '  ✓ Foreign key constraints';
   RAISE NOTICE '';

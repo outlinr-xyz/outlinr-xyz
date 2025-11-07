@@ -153,7 +153,7 @@ const presentationRoutes: RouteObject = {
       children: [
         {
           index: true,
-          element: <QuestionPage />,
+          element: <Navigate to="question" replace />,
         },
         {
           path: 'question',

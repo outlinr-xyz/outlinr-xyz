@@ -42,7 +42,6 @@ export const env: EnvConfig = {
   isProduction: import.meta.env.PROD,
 };
 
-// Validate critical environment variables on load
 if (env.isDevelopment) {
   console.log('Environment loaded:', {
     supabaseUrl: env.supabase.url,
