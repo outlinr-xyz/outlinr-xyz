@@ -41,6 +41,10 @@ export const sidebarItems = {
       url: '/app/billing',
     },
     {
+      title: 'pricing',
+      url: '/app/pricing',
+    },
+    {
       title: 'support',
       url: 'mailto:admin@outlinr.xyz',
     },

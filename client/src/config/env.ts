@@ -8,6 +8,9 @@ interface EnvConfig {
     url: string;
     anonKey: string;
   };
+  lemonSqueezy: {
+    apiKey: string;
+  };
   app: {
     name: string;
     supportEmail: string;
@@ -33,6 +36,9 @@ export const env: EnvConfig = {
   supabase: {
     url: getEnvVar('VITE_SUPABASE_URL'),
     anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY'),
+  },
+  lemonSqueezy: {
+    apiKey: getEnvVar('VITE_LEMON_SQUEEZY_API_KEY'),
   },
   app: {
     name: getOptionalEnvVar('VITE_APP_NAME', 'Outlinr'),

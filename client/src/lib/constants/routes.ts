@@ -29,6 +29,7 @@ export const ROUTES = {
     TRASH: '/app/trash',
     ACCOUNT: '/app/account',
     BILLING: '/app/billing',
+    PRICING: '/app/pricing',
   },
 
   // Presentation routes
