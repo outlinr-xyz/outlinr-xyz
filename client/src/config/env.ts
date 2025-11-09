@@ -38,7 +38,7 @@ export const env: EnvConfig = {
     anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY'),
   },
   lemonSqueezy: {
-    apiKey: getEnvVar('VITE_LEMON_SQUEEZY_API_KEY'),
+    apiKey: getEnvVar('VITE_LEMON_SQUEEZY_API_KEY', 'fucking retard'),
   },
   app: {
     name: getOptionalEnvVar('VITE_APP_NAME', 'Outlinr'),
