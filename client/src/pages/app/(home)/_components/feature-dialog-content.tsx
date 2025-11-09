@@ -33,7 +33,7 @@ const FeatureDialogContent = memo(function FeatureDialogContent({
         <div className="order-1 min-w-0 flex-1 md:order-2">
           <img
             key={selectedFeature.name}
-            src={'/gif.png'}
+            src={'/gif.webp'}
             alt={`${selectedFeature.name} demo GIF`}
             className="h-auto w-full rounded-lg object-contain"
             loading="lazy"
