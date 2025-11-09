@@ -4,9 +4,9 @@ import { useRecentPresentations } from '@/hooks/use-presentations';
 import { filterPresentations, formatTimeAgo } from '@/lib/utils';
 import type { Presentation } from '@/types';
 
-import EmptyState from '../../_components/empty-state';
-import PresentationList from '../../_components/presentation-list';
-import PresentationSearch from '../../_components/presentation-search';
+import EmptyState from '../_components/empty-state';
+import PresentationList from '../_components/presentation-list';
+import PresentationSearch from '../_components/presentation-search';
 
 const WorkSpacePage = () => {
   const { presentations, isLoading, error, refetch } = useRecentPresentations();

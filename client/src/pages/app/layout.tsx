@@ -5,8 +5,8 @@ import PageLoader from '@/components/page-loader';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { useSetSidebarOpen, useSidebarOpen } from '@/store/preferences.store';
 
-import AppNavbar from './_components/app-navbar';
-import AppSidebar from './_components/app-sidebar';
+import AppNavbar from './(home)/_components/app-navbar';
+import AppSidebar from './(home)/_components/app-sidebar';
 
 const AppLayout = () => {
   const sidebarOpen = useSidebarOpen();

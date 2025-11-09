@@ -3,9 +3,9 @@ import { Sparkle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useUserDisplayName } from '@/store/auth.store';
 
-import NewPresentationButton from '../../_components/new-presentation-button';
-import PopularFeatures from '../../_components/popular-features';
-import RecentPresentations from '../../_components/recent-presentations';
+import NewPresentationButton from '../_components/new-presentation-button';
+import PopularFeatures from '../_components/popular-features';
+import RecentPresentations from '../_components/recent-presentations';
 
 const HomePage = () => {
   const displayName = useUserDisplayName();

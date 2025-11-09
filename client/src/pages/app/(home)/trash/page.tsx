@@ -5,9 +5,9 @@ import { useDeletedPresentations } from '@/hooks/use-presentations';
 import { cleanupOldDeletedPresentations } from '@/lib/api/presentations';
 import { filterPresentations } from '@/lib/utils';
 
-import EmptyState from '../../_components/empty-state';
-import PresentationSearch from '../../_components/presentation-search';
-import TrashListItem from '../../_components/trash-list-item';
+import EmptyState from '../_components/empty-state';
+import PresentationSearch from '../_components/presentation-search';
+import TrashListItem from '../_components/trash-list-item';
 
 const TrashPage = () => {
   const { presentations, isLoading, error, refetch } =

@@ -1,5 +1,3 @@
-import { Droplet, Shapes, Signal } from 'lucide-react';
-
 /**
  * Popular features/question types configuration
  */
@@ -7,27 +5,31 @@ import { Droplet, Shapes, Signal } from 'lucide-react';
 export const popularFeatures = [
   {
     name: 'Word Cloud',
-    icon: Shapes,
-    color: 'text-red-500',
     imageSrc: '/word-cloud.webp',
+    description:
+      'Collect and visualize audience responses in a dynamic, growing cloud.',
+    gifSrc: './gif.png',
   },
   {
     name: 'Poll',
-    icon: Signal,
-    color: 'text-indigo-500',
     imageSrc: '/polls.webp',
+    description:
+      'Ask multiple-choice questions and see results in real-time charts.',
+    gifSrc: './gif.png',
   },
   {
     name: 'Open Ended',
-    icon: Droplet,
-    color: 'text-rose-400',
     imageSrc: '/open-ended.webp',
+    description:
+      'Let participants submit free-text answers which appear on screen.',
+    gifSrc: './gif.png',
   },
   {
     name: 'Scales',
-    icon: Droplet,
-    color: 'text-rose-400',
     imageSrc: '/scales.webp',
+    description:
+      'Get clear feedback by having your audience rate statements on a sliding scale.',
+    gifSrc: './gif.png',
   },
 ] as const;
 

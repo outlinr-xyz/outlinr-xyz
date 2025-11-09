@@ -12,10 +12,10 @@ import {
 } from '@/store/preferences.store';
 import type { Presentation } from '@/types/presentation';
 
-import EmptyState from '../../_components/empty-state';
-import NewPresentationButton from '../../_components/new-presentation-button';
-import PresentationList from '../../_components/presentation-list';
-import PresentationSearch from '../../_components/presentation-search';
+import EmptyState from '../_components/empty-state';
+import NewPresentationButton from '../_components/new-presentation-button';
+import PresentationList from '../_components/presentation-list';
+import PresentationSearch from '../_components/presentation-search';
 
 const DashboardPage = () => {
   const {

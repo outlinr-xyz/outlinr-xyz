@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import PresentationSearch from '../../_components/presentation-search';
+import PresentationSearch from '../_components/presentation-search';
 
 const TemplatesPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
