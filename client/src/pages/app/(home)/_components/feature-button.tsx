@@ -8,7 +8,6 @@ const FeatureButton = memo(function FeatureButton({
 }: FeatureButtonProps) {
   return (
     <button
-      key={feature.name}
       onClick={() => onClick(feature)}
       className="group relative flex h-48 w-full max-w-36 cursor-pointer flex-col items-center justify-start gap-2 p-3 transition-transform duration-200 hover:scale-[1.03]"
     >

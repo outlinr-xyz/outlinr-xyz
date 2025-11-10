@@ -37,12 +37,8 @@ export const sidebarItems = {
       url: '/app/account',
     },
     {
-      title: 'billing',
-      url: '/app/billing',
-    },
-    {
       title: 'pricing',
-      url: '/app/pricing',
+      url: '/pricing',
     },
     {
       title: 'support',

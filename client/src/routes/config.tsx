@@ -4,6 +4,7 @@ import { Navigate, Outlet } from 'react-router';
 
 import { ProtectedRoute } from '@/components/protected-routes';
 import { ROUTES } from '@/lib/constants/routes';
+import WorkSpacePage from '@/pages/app/(home)/workspace/page';
 
 /**
  * Lazy-loaded page components
@@ -11,9 +12,7 @@ import { ROUTES } from '@/lib/constants/routes';
 // Public pages
 const PublicLayout = lazy(() => import('@/pages/(public)/layout'));
 const PublicPage = lazy(() => import('@/pages/(public)/page'));
-const LandingPricingPage = lazy(
-  () => import('@/pages/(public)/landing-pricing/page'),
-);
+const LandingPricingPage = lazy(() => import('@/pages/(public)/pricing/page'));
 const ComparisonPage = lazy(() => import('@/pages/(public)/comparison/page'));
 
 // Auth pages
@@ -25,7 +24,6 @@ const SignupPage = lazy(() => import('@/pages/auth/sign-up/page'));
 const AppLayout = lazy(() => import('@/pages/app/layout'));
 const HomePage = lazy(() => import('@/pages/app/(home)/home/page'));
 const DashboardPage = lazy(() => import('@/pages/app/(home)/dashboard/page'));
-const AppPricingPage = lazy(() => import('@/pages/app/(home)/pricing/page'));
 const TemplatesPage = lazy(() => import('@/pages/app/(home)/templates/page'));
 
 const TrashPage = lazy(() => import('@/pages/app/(home)/trash/page'));
@@ -117,22 +115,17 @@ const appRoutes: RouteObject = {
       path: 'dashboard',
       element: <DashboardPage />,
     },
-    // {
-    //   path: 'workspace',
-    //   element: <WorkSpacePage />,
-    // },
     {
-      path: 'pricing',
-      element: <AppPricingPage />,
+      path: 'workspace',
+      element: <WorkSpacePage />,
+    },
+    {
+      path: 'trash',
+      element: <TrashPage />,
     },
     {
       path: 'templates',
       element: <TemplatesPage />,
-    },
-
-    {
-      path: 'trash',
-      element: <TrashPage />,
     },
   ],
 };

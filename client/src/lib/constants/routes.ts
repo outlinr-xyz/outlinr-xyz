@@ -28,8 +28,7 @@ export const ROUTES = {
     SHARED_WITH_ME: '/app/shared-with-me',
     TRASH: '/app/trash',
     ACCOUNT: '/app/account',
-    BILLING: '/app/billing',
-    PRICING: '/app/pricing',
+    BILLING: '/billing',
   },
 
   // Presentation routes
