@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -58,6 +58,9 @@ type LoadingProvider =
 
 export function SignupForm({ className, ...props }: Props) {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const redirectTo = searchParams.get('redirectTo') || '/app/home';
+
   const setSession = useAuthStore((s) => s.setSession);
   const setUser = useAuthStore((s) => s.setUser);
 
@@ -100,7 +103,7 @@ export function SignupForm({ className, ...props }: Props) {
       setUser(userData ?? null);
 
       toast.success('Account created successfully.');
-      navigate('/app/home', { replace: true });
+      navigate(redirectTo, { replace: true });
     } catch (e: unknown) {
       toast.error(e instanceof Error ? e.message : 'Unexpected error.');
     } finally {
